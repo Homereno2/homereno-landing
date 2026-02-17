@@ -7,16 +7,40 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       line-height: 1.6;
       color: #333;
-      background: #fff;
-      padding: 20px;
+      background: #f8f9fa;
+      min-height: 100vh;
     }
+    .site-header {
+      background: #1a1a1a;
+      color: #fff;
+      padding: 16px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .site-header .inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .site-header a { color: #fff; text-decoration: none; font-size: 0.95rem; }
+    .site-header a:hover { text-decoration: underline; }
+    .logo { font-weight: 700; font-size: 1.25rem; }
+    .nav { display: flex; gap: 20px; flex-wrap: wrap; }
     .container {
       max-width: 800px;
       margin: 0 auto;
-      padding: 40px 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      padding: 48px 40px;
+      margin-top: 24px;
+      margin-bottom: 32px;
     }
     header {
       text-align: center;
@@ -25,9 +49,15 @@
       border-bottom: 2px solid #e0e0e0;
     }
     h1 { font-size: 2rem; color: #1a1a1a; margin-bottom: 8px; }
-    .subtitle { font-size: 1rem; color: #666; }
-    h2 { font-size: 1.5rem; color: #1a1a1a; margin-top: 32px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e0e0e0; }
+    .subtitle { font-size: 1.05rem; color: #666; }
+    .nav-links { margin-top: 16px; font-size: 0.95em; }
+    .nav-links a { margin: 0 8px; color: #0066cc; text-decoration: none; }
+    .nav-links a:hover { text-decoration: underline; }
+    h2 { font-size: 1.4rem; color: #1a1a1a; margin-top: 32px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e0e0e0; }
+    h3 { font-size: 1.15rem; color: #333; margin-top: 20px; margin-bottom: 8px; }
     p { margin-bottom: 14px; color: #444; }
+    ul { margin: 12px 0 16px 24px; }
+    li { margin-bottom: 8px; color: #444; }
     .consent-box {
       background: #f8f9fa;
       border-left: 4px solid #0066cc;
@@ -36,58 +66,173 @@
       font-size: 1rem;
     }
     .consent-box p { margin-bottom: 0; }
-    ul { margin: 12px 0 12px 24px; }
-    li { margin-bottom: 8px; color: #444; }
-    a { color: #0066cc; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .nav-links { margin-top: 16px; font-size: 0.95em; }
-    .nav-links a { margin: 0 8px; }
-    footer { text-align: center; margin-top: 48px; padding-top: 24px; border-top: 2px solid #e0e0e0; color: #666; font-size: 0.9em; }
+    /* Mockup: Facebook Lead Form consent checkbox */
+    .mockup {
+      margin: 28px 0;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      max-width: 420px;
+    }
+    .mockup-caption {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 10px;
+      font-style: italic;
+    }
+    .mockup-header {
+      background: #1877f2;
+      color: #fff;
+      padding: 14px 20px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .mockup-body {
+      padding: 24px 20px;
+      background: #fff;
+    }
+    .mockup-body label {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: #333;
+      line-height: 1.5;
+    }
+    .mockup-body input[type="checkbox"] {
+      margin-top: 3px;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+    .mockup-body .checkbox-text {
+      flex: 1;
+    }
+    .mockup-body .small-print {
+      font-size: 0.8rem;
+      color: #65676b;
+      margin-top: 12px;
+    }
+    footer {
+      text-align: center;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 2px solid #e0e0e0;
+      color: #666;
+      font-size: 0.9em;
+    }
+    footer a { color: #0066cc; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
+  <header class="site-header">
+    <div class="inner">
+      <a href="index.html" class="logo">Home Reno Hotspot</a>
+      <nav class="nav">
+        <a href="about.html">About</a>
+        <a href="for-contractors.html">For Contractors</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms-of-service.html">Terms</a>
+        <a href="homeowner-opt-in.html">SMS Opt-In</a>
+      </nav>
+    </div>
+  </header>
+
   <div class="container">
     <header>
       <h1>Homeowner SMS Opt-In</h1>
-      <p class="subtitle">Home Reno Hotspot — How homeowners consent to receive SMS</p>
+      <p class="subtitle">How homeowners consent to receive SMS from Home Reno Hotspot</p>
       <p class="nav-links">
         <a href="index.html">Home</a>
         <a href="privacy-policy.html">Privacy Policy</a>
         <a href="terms-of-service.html">Terms of Service</a>
+        <a href="contact.html">Contact</a>
       </p>
     </header>
 
     <section>
-      <h2>When homeowners consent to receive SMS</h2>
-      <p>Homeowners consent to receive SMS from Home Reno Hotspot in two ways:</p>
+      <h2>Overview</h2>
+      <p>
+        Home Reno Hotspot sends SMS (text) messages to homeowners to confirm project submissions, share contractor matches, 
+        schedule calls, and send appointment reminders. We obtain consent before sending marketing or promotional SMS and 
+        document how and when homeowners agree to receive these messages. This page describes our opt-in process for 
+        compliance and transparency (including for 10DLC and carrier requirements).
+      </p>
+    </section>
+
+    <section>
+      <h2>Ways Homeowners Consent to Receive SMS</h2>
+      <p>Homeowners consent to receive SMS from Home Reno Hotspot in the following ways:</p>
       <ul>
-        <li><strong>Facebook Lead Ad form.</strong> When they submit a Facebook Lead Ad form, the form includes an SMS consent checkbox and/or consent language. By submitting the form, they agree to receive SMS about their renovation project.</li>
-        <li><strong>Texting us first.</strong> When they text us first (initiate the conversation), they give implied consent by choosing to communicate with us via SMS. We use that channel to respond and support their project.</li>
+        <li><strong>Facebook Lead Ad form.</strong> When a homeowner submits a Facebook Lead Ad form for Home Reno Hotspot, the form includes clear SMS consent language and a checkbox. By checking the box and submitting the form, the homeowner agrees to receive SMS about their renovation project. We store the lead and consent timestamp.</li>
+        <li><strong>Initiating contact via text.</strong> When a homeowner texts our number first (e.g., after seeing our number on our website or materials), they give implied consent to receive SMS replies from us for that conversation and related service communications. We use SMS to respond and support their project.</li>
       </ul>
     </section>
 
     <section>
-      <h2>Exact consent language shown on Facebook Lead Ads</h2>
-      <p>The following language is shown on our Facebook Lead Ad forms:</p>
+      <h2>Facebook Lead Form — Consent Language (Mockup)</h2>
+      <p>
+        Our Facebook Lead Ad forms include the following consent language. The user must acknowledge the checkbox before 
+        submitting the form. Below is a representative mockup of how the consent appears in the form flow.
+      </p>
+      <div class="mockup">
+        <div class="mockup-header">Home Reno Hotspot — Get matched with a pro</div>
+        <div class="mockup-body">
+          <label>
+            <input type="checkbox" checked disabled>
+            <span class="checkbox-text">
+              I agree to receive SMS messages from Home Reno Hotspot about my home renovation request. 
+              Message frequency varies. Message and data rates may apply. Reply HELP for help or STOP to unsubscribe.
+            </span>
+          </label>
+          <p class="small-print">
+            By submitting, you agree to our Privacy Policy and Terms. We will not share your mobile number with third parties for marketing.
+          </p>
+        </div>
+      </div>
+      <p class="mockup-caption">Representative mockup of SMS consent on our Facebook Lead Ad form. Actual form may vary slightly in layout.</p>
+
+      <h3>Exact consent language used</h3>
+      <p>The following language is displayed and must be agreed to on our Facebook Lead Ad forms:</p>
       <div class="consent-box">
         <p>
-          I agree to receive SMS messages from Home Reno Hotspot about my home renovation request. Message frequency varies. Msg & data rates may apply. Reply HELP for help or STOP to unsubscribe.
+          I agree to receive SMS messages from Home Reno Hotspot about my home renovation request. Message frequency varies. 
+          Message and data rates may apply. Reply HELP for help or STOP to unsubscribe.
         </p>
       </div>
     </section>
 
     <section>
-      <h2>How homeowners can opt out</h2>
+      <h2>Opt-Out (Unsubscribe)</h2>
       <p>Homeowners can opt out of SMS at any time by:</p>
       <ul>
-        <li><strong>Replying STOP</strong> to any message from Home Reno Hotspot. After STOP, they will receive a final confirmation and no further messages.</li>
-        <li>Emailing <a href="mailto:help@homerenohotspot.com">help@homerenohotspot.com</a> to request removal from SMS communications.</li>
+        <li><strong>Replying STOP</strong> to any message from Home Reno Hotspot. We will send a final confirmation and cease SMS to that number.</li>
+        <li><strong>Emailing us:</strong> <a href="mailto:help@homerenohotspot.com">help@homerenohotspot.com</a> or <a href="mailto:privacy@homerenohotspot.com">privacy@homerenohotspot.com</a> to request removal from SMS communications.</li>
       </ul>
-      <p>Message and data rates may apply. Carriers are not liable for delayed or undelivered messages.</p>
+      <p>
+        Message and data rates may apply. Carriers are not liable for delayed or undelivered messages. Our full SMS and 
+        data practices are described in our <a href="privacy-policy.html">Privacy Policy</a>.
+      </p>
+    </section>
+
+    <section>
+      <h2>Documentation and Compliance</h2>
+      <p>
+        We retain records of consent (e.g., lead form submission time and consent language version) for compliance and 
+        dispute resolution. For questions about our opt-in process or to request a copy of our consent language, contact 
+        <a href="mailto:privacy@homerenohotspot.com">privacy@homerenohotspot.com</a> or see our <a href="contact.html">Contact</a> page.
+      </p>
     </section>
 
     <footer>
       <p>&copy; 2026 Home Reno Hotspot. All rights reserved.</p>
+      <p style="margin-top: 8px;">
+        <a href="privacy-policy.html">Privacy Policy</a> &middot; <a href="terms-of-service.html">Terms of Service</a> &middot; <a href="contact.html">Contact</a>
+      </p>
     </footer>
   </div>
 </body>

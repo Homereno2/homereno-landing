@@ -5,288 +5,230 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy - Home Reno Hotspot</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
             color: #333;
-            background-color: #fff;
-            padding: 20px;
+            background: #f8f9fa;
+            min-height: 100vh;
         }
-
+        .site-header {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 16px 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .site-header .inner {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .site-header a { color: #fff; text-decoration: none; font-size: 0.95rem; }
+        .site-header a:hover { text-decoration: underline; }
+        .logo { font-weight: 700; font-size: 1.25rem; }
+        .nav { display: flex; gap: 20px; flex-wrap: wrap; }
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 40px 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+            padding: 48px 40px;
+            margin-top: 24px;
+            margin-bottom: 32px;
         }
-
-        header {
-            text-align: center;
-            margin-bottom: 50px;
-            padding-bottom: 30px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        h1 {
-            font-size: 2.5em;
-            color: #1a1a1a;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            font-size: 1.1em;
-            color: #666;
-            margin-top: 10px;
-        }
-
-        h2 {
-            font-size: 1.8em;
-            color: #1a1a1a;
-            margin-top: 40px;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        h3 {
-            font-size: 1.3em;
-            color: #333;
-            margin-top: 25px;
-            margin-bottom: 10px;
-        }
-
-        p {
-            margin-bottom: 15px;
-            color: #444;
-        }
-
-        ul {
-            margin: 15px 0 15px 30px;
-        }
-
-        li {
-            margin-bottom: 10px;
-            color: #444;
-        }
-
+        header { text-align: center; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 2px solid #e0e0e0; }
+        h1 { font-size: 2rem; color: #1a1a1a; margin-bottom: 8px; }
+        .subtitle { font-size: 1.05rem; color: #666; margin-top: 8px; }
+        .effective-date { text-align: center; color: #666; font-style: italic; margin: 12px 0 0; }
+        .nav-links { margin-top: 16px; font-size: 0.95em; }
+        .nav-links a { margin: 0 8px; color: #0066cc; text-decoration: none; }
+        .nav-links a:hover { text-decoration: underline; }
+        h2 { font-size: 1.5rem; color: #1a1a1a; margin-top: 36px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e0e0e0; }
+        h3 { font-size: 1.2rem; color: #333; margin-top: 20px; margin-bottom: 8px; }
+        p { margin-bottom: 14px; color: #444; }
+        ul { margin: 12px 0 16px 24px; }
+        li { margin-bottom: 8px; color: #444; }
         .highlight {
-            background-color: #fff3cd;
-            padding: 20px;
-            border-left: 4px solid #ffc107;
-            margin: 25px 0;
+            background: #fff8e6;
+            padding: 20px 24px;
+            border-left: 4px solid #e6b800;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
         }
-
         .contact-box {
-            background-color: #f8f9fa;
-            padding: 25px;
+            background: #f0f7ff;
+            padding: 24px;
             border-radius: 8px;
-            margin-top: 40px;
+            margin-top: 32px;
+            border-left: 4px solid #0066cc;
         }
-
-        .contact-box h3 {
-            margin-top: 0;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 60px;
-            padding-top: 30px;
-            border-top: 2px solid #e0e0e0;
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .effective-date {
-            text-align: center;
-            color: #666;
-            font-style: italic;
-            margin-bottom: 40px;
-        }
-
-        .nav-links {
-            margin-top: 15px;
-            font-size: 0.95em;
-        }
-
-        .nav-links a {
-            margin: 0 8px;
-        }
+        .contact-box h3 { margin-top: 0; }
+        footer { text-align: center; margin-top: 40px; padding-top: 24px; border-top: 2px solid #e0e0e0; color: #666; font-size: 0.9em; }
+        a { color: #0066cc; text-decoration: none; }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
+    <header class="site-header">
+        <div class="inner">
+            <a href="index.html" class="logo">Home Reno Hotspot</a>
+            <nav class="nav">
+                <a href="about.html">About</a>
+                <a href="for-contractors.html">For Contractors</a>
+                <a href="contact.html">Contact</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms</a>
+                <a href="homeowner-opt-in.html">SMS Opt-In</a>
+            </nav>
+        </div>
+    </header>
+
     <div class="container">
         <header>
             <h1>Privacy Policy</h1>
             <div class="subtitle">Home Reno Hotspot</div>
-            <p class="effective-date">Last Updated: February 2026</p>
+            <p class="effective-date">Last Updated: January 2026</p>
             <p class="nav-links">
+                <a href="index.html">Home</a>
                 <a href="terms-of-service.html">Terms of Service</a>
+                <a href="contact.html">Contact</a>
             </p>
         </header>
 
         <section>
             <h2>Introduction</h2>
             <p>
-                Welcome to Home Reno Hotspot. We are committed to protecting your privacy and ensuring the security of your personal information. 
-                This Privacy Policy explains how we collect, use, share, and protect your information when you use our service to connect with 
-                home renovation contractors in the New York City area.
+                Home Reno Hotspot (“we,” “us,” “our”) is committed to protecting your privacy. This Privacy Policy describes what personal data we collect, how we use it, how we share it, how long we keep it, and your rights. It applies when you use our service to connect with home renovation contractors in the New York City area, including when you communicate with us via SMS/text messaging.
             </p>
             <p>
-                By submitting your information through our service, you consent to the collection and use of your information as described in this policy.
+                By submitting your information or using our service, you consent to the collection and use of your information as described in this policy. If you have questions about this policy or our privacy practices, contact us at the information in the “Contact for Privacy Questions” section below.
             </p>
         </section>
 
         <section>
-            <h2>What Information We Collect</h2>
-            <p>When you use Home Reno Hotspot, we collect the following information:</p>
+            <h2>What Data We Collect</h2>
+            <p>We collect the following categories of information when you use Home Reno Hotspot:</p>
             <ul>
-                <li><strong>Contact Information:</strong> Your name, phone number, and email address</li>
-                <li><strong>Project Details:</strong> Information about your home renovation project, including project type, location, timeline, and any specific requirements</li>
-                <li><strong>Property Information:</strong> Your property address and details about the areas you want to renovate</li>
-                <li><strong>Communication Records:</strong> Messages and conversations you have through our platform</li>
+                <li><strong>Contact information:</strong> Name, phone number, and email address.</li>
+                <li><strong>Project details:</strong> Information about your renovation project (e.g., project type, location, timeline, budget, and other requirements you provide).</li>
+                <li><strong>Property information:</strong> Property address and details about areas you want to renovate, when you choose to share them.</li>
+                <li><strong>Communication data:</strong> Content of messages and conversations you have with us (including via SMS/text) and related metadata (e.g., date and time).</li>
+                <li><strong>Lead and consent data:</strong> How you came to us (e.g., lead form, ad campaign), and records of your consent to receive SMS and other communications where applicable.</li>
             </ul>
         </section>
 
         <section>
-            <h2>How We Use Your Information</h2>
-            <p>We use the information we collect for the following purposes:</p>
+            <h2>How We Use Your Data</h2>
+            <p>We use the data we collect to:</p>
             <ul>
-                <li><strong>Contractor Matching:</strong> To match you with qualified contractors in your area who can help with your renovation project</li>
-                <li><strong>Communication:</strong> To send you SMS updates about your project, contractor matches, and appointment scheduling</li>
-                <li><strong>Service Coordination:</strong> To coordinate appointments and facilitate communication between you and contractors</li>
-                <li><strong>Service Improvement:</strong> To improve our matching algorithm and enhance our service quality</li>
-                <li><strong>Customer Support:</strong> To respond to your questions and provide assistance</li>
+                <li><strong>Provide our service:</strong> Match you with qualified contractors, coordinate call windows, and facilitate communication between you and contractors.</li>
+                <li><strong>Communicate with you:</strong> Send you SMS and other messages about your project, contractor matches, scheduling, and service-related updates.</li>
+                <li><strong>Improve our service:</strong> Analyze usage and feedback to improve our matching, platform, and user experience.</li>
+                <li><strong>Support and compliance:</strong> Respond to your questions, handle opt-outs and data requests, and comply with legal obligations.</li>
             </ul>
         </section>
 
         <section>
-            <h2>SMS/Mobile Information</h2>
+            <h2>How We Share Your Data</h2>
+            <h3>With contractors</h3>
             <p>
-                Your mobile phone number and SMS communications will not be sold, rented, or shared with third parties for promotional or marketing purposes. We use your mobile information solely to communicate with you about your renovation project and contractor matching.
+                We share your contact information and project details with contractors who are matched to your renovation needs so they can contact you and discuss your project. We do not sell your information to contractors or others.
+            </p>
+            <h3>With service providers</h3>
+            <p>
+                We may share your information with trusted service providers that help us operate our platform (e.g., SMS delivery, hosting, and data storage). These providers are required to protect your information and use it only to perform services for us.
+            </p>
+            <h3>We do not sell your personal information</h3>
+            <p>
+                We do not sell your personal information to third parties. We do not share your mobile phone number or other contact information with third parties for their own marketing or promotional purposes.
             </p>
         </section>
 
-        <div class="highlight">
-            <h3>SMS Communications & Consent</h3>
+        <section>
+            <h2>SMS and Text Messaging — Data Practices and Opt-Out</h2>
             <p>
-                <strong>By providing your phone number, you consent to receive SMS text messages from Home Reno Hotspot.</strong> 
-                These messages may include:
+                We send SMS (text) messages to communicate about your project, contractor matches, appointments, and related service matters. This section describes our SMS data practices and how you can opt out.
             </p>
             <ul>
-                <li>Confirmation of your project submission</li>
-                <li>Contractor match notifications</li>
-                <li>Appointment reminders and scheduling updates</li>
-                <li>Service-related communications</li>
+                <li><strong>What we do with your mobile number and SMS data:</strong> We use your mobile number and SMS message content only to deliver and support our service (e.g., matching, scheduling, and support). We do not share your mobile number or SMS data with third parties for their marketing or promotional purposes.
+                </li>
+                <li><strong>Consent:</strong> By providing your phone number and agreeing to receive texts (e.g., via our lead form or by initiating contact via SMS), you consent to receive service-related SMS from Home Reno Hotspot. Message and data rates may apply.
+                </li>
+                <li><strong>How to opt out of SMS:</strong> You may opt out of SMS at any time by replying <strong>STOP</strong> to any message from us. After you reply STOP, we will send a final confirmation message and then stop sending you SMS. You may also reply <strong>HELP</strong> for assistance. Opting out of SMS does not necessarily remove your data from our systems; for deletion, see “Your Rights” below.
+                </li>
             </ul>
             <p>
-                <strong>Message and data rates may apply.</strong> You can opt out of receiving SMS messages at any time by replying 
-                <strong>STOP</strong> to any message from us. You may also reply <strong>HELP</strong> for assistance.
-            </p>
-        </div>
-
-        <section>
-            <h2>How We Share Your Information</h2>
-            
-            <h3>With Contractors</h3>
-            <p>
-                We share your contact information and project details with contractors who match your renovation needs. 
-                This allows them to reach out to you to discuss your project and provide quotes.
-            </p>
-
-            <h3>Service Providers</h3>
-            <p>
-                We may share your information with trusted service providers who help us operate our platform, such as SMS delivery 
-                services and data storage providers. These providers are contractually obligated to protect your information.
-            </p>
-
-            <h3>What We Don't Do</h3>
-            <p><strong>We do not sell your personal information to third parties.</strong></p>
-        </section>
-
-        <section>
-            <h2>Data Security</h2>
-            <p>
-                We implement appropriate technical and organizational measures to protect your personal information against unauthorized 
-                access, alteration, disclosure, or destruction. However, no internet transmission is completely secure, and we cannot 
-                guarantee absolute security.
-            </p>
-        </section>
-
-        <section>
-            <h2>Your Rights</h2>
-            <p>You have the following rights regarding your personal information:</p>
-            <ul>
-                <li><strong>Access:</strong> You can request access to the personal information we hold about you</li>
-                <li><strong>Correction:</strong> You can request that we correct any inaccurate information</li>
-                <li><strong>Deletion:</strong> You can request that we delete your personal information</li>
-                <li><strong>Opt-Out:</strong> You can opt out of SMS communications at any time by replying STOP</li>
-                <li><strong>Withdraw Consent:</strong> You can withdraw your consent for us to use your information</li>
-            </ul>
-            <p>
-                To exercise any of these rights, please contact us using the information provided below.
+                <strong>Your mobile information will not be shared with third parties for marketing.</strong> We do not sell, rent, or share your mobile phone number or SMS communications with third parties for their promotional or marketing purposes.
             </p>
         </section>
 
         <section>
             <h2>Data Retention</h2>
             <p>
-                We retain your personal information for as long as necessary to provide our services and fulfill the purposes 
-                outlined in this Privacy Policy. You may request deletion of your information at any time by contacting us.
+                We retain your personal data for as long as needed to provide our services, fulfill the purposes described in this policy, and comply with legal obligations. For example, we may retain project and communication data for the duration of your project and for a reasonable period afterward for support and records. You may request deletion of your information at any time (see “Your Rights”); we will process such requests in line with applicable law and our operational requirements.
             </p>
         </section>
 
         <section>
-            <h2>Children's Privacy</h2>
+            <h2>Your Rights</h2>
+            <p>You have the following rights regarding your personal data:</p>
+            <ul>
+                <li><strong>Access:</strong> You may request a copy of or access to the personal information we hold about you.</li>
+                <li><strong>Correction:</strong> You may request that we correct inaccurate or incomplete information.</li>
+                <li><strong>Deletion:</strong> You may request that we delete your personal information, subject to applicable law and legitimate business needs (e.g., legal hold, dispute resolution).</li>
+                <li><strong>Opt-out of SMS:</strong> You may opt out of SMS at any time by replying <strong>STOP</strong> to any message from us.</li>
+                <li><strong>Withdraw consent:</strong> Where we rely on your consent, you may withdraw it at any time; withdrawal does not affect the lawfulness of processing before withdrawal.</li>
+            </ul>
             <p>
-                Our service is not intended for individuals under the age of 18. We do not knowingly collect personal information 
-                from children. If you believe we have collected information from a child, please contact us immediately.
+                To exercise any of these rights, or if you have privacy-related questions, please contact us using the “Contact for Privacy Questions” information below. We will respond in accordance with applicable law.
+            </p>
+        </section>
+
+        <section>
+            <h2>Data Security</h2>
+            <p>
+                We use reasonable technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. No method of transmission over the internet or electronic storage is 100% secure; we cannot guarantee absolute security.
+            </p>
+        </section>
+
+        <section>
+            <h2>Children’s Privacy</h2>
+            <p>
+                Our service is not intended for individuals under 18. We do not knowingly collect personal information from children. If you believe we have collected information from a child, please contact us immediately.
             </p>
         </section>
 
         <section>
             <h2>Changes to This Privacy Policy</h2>
             <p>
-                We may update this Privacy Policy from time to time. We will notify you of any significant changes by updating 
-                the "Last Updated" date at the top of this policy. We encourage you to review this policy periodically.
+                We may update this Privacy Policy from time to time. We will post the revised policy on this page and update the “Last Updated” date. We encourage you to review this policy periodically. Continued use of our service after changes constitutes acceptance of the updated policy where permitted by law.
             </p>
         </section>
 
         <div class="contact-box">
-            <h3>Contact Us</h3>
+            <h3>Contact for Privacy Questions</h3>
             <p>
-                If you have any questions about this Privacy Policy or our privacy practices, please contact us:
+                If you have any questions about this Privacy Policy, our privacy practices, or wish to exercise your rights (access, correction, deletion, opt-out), please contact us:
             </p>
             <p>
                 <strong>Email:</strong> <a href="mailto:privacy@homerenohotspot.com">privacy@homerenohotspot.com</a><br>
                 <strong>Service:</strong> Home Reno Hotspot<br>
-                <strong>Service Area:</strong> New York City Metro Area
+                <strong>Service area:</strong> New York City Metro Area
             </p>
-            <p style="margin-top: 15px;">
-                <a href="terms-of-service.html">View our Terms of Service</a>
+            <p style="margin-top: 12px;">
+                <a href="contact.html">Contact page</a> &middot; <a href="terms-of-service.html">Terms of Service</a>
             </p>
         </div>
 
         <footer>
-            <p>
-                &copy; 2026 Home Reno Hotspot. All rights reserved.
-            </p>
-            <p style="margin-top: 10px;">
-                This privacy policy is effective as of February 2026.
-            </p>
+            <p>&copy; 2026 Home Reno Hotspot. All rights reserved.</p>
+            <p style="margin-top: 8px;">This privacy policy is effective as of January 2026.</p>
         </footer>
     </div>
 </body>
