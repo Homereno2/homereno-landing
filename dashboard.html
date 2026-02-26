@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Home Reno Hotspot — Operations Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #04070d; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0a1019; }
+  ::-webkit-scrollbar-thumb { background: #253a6a; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
+
+const C = {
+  bg: "#04070d", surface: "#0a1019", surfaceHover: "#0d1520",
+  border: "#162040", borderActive: "#253a6a",
+  text: "#dce4f0", textDim: "#5a6f90", textMid: "#8899b5",
+  cyan: "#06b6d4", blue: "#3b82f6", green: "#10b981",
+  amber: "#f59e0b", purple: "#8b5cf6", pink: "#ec4899",
+  orange: "#f97316", red: "#ef4444", lime: "#84cc16", rose: "#f43f5e",
+};
+
+const STATUS = {
+  pending: { label: "PENDING", color: C.amber, icon: "◷" },
+  routed: { label: "ROUTED", color: C.blue, icon: "→" },
+  rerouting: { label: "REROUTING", color: C.orange, icon: "↻" },
+  accepted: { label: "ACCEPTED", color: C.green, icon: "✓" },
+  declined: { label: "DECLINED", color: C.red, icon: "✗" },
+  timeout: { label: "TIMEOUT", color: C.rose, icon: "◌" },
+  completed: { label: "COMPLETED", color: C.lime, icon: "★" },
+  lead_magnet: { label: "LEAD MAGNET", color: C.purple, icon: "◈" },
+  failed: { label: "UNMATCHED", color: C.red, icon: "⚠" },
+  in_progress: { label: "IN PROGRESS", color: C.cyan, icon: "⟳" },
+};
+
+const MOCK_JOBS = [
+  {
+    id: "J-0041", homeowner: "Maria S.", type: "Interior Painting", area: "Astoria, Queens",
+    appointment: "2026-02-27T14:00:00", created: "2026-02-26T09:15:00", urgency: "high", estimated_value: "$3,200", status: "routed",
+    routing_chain: [
+      { contractor: "Mike's Painting Co", action: "routed", time: "2026-02-26T09:16:00", response_time: null },
+    ],
+  },
+  {
+    id: "J-0040", homeowner: "David L.", type: "Kitchen Painting", area: "Williamsburg, Brooklyn",
+    appointment: "2026-02-28T10:00:00", created: "2026-02-26T08:42:00", urgency: "medium", estimated_value: "$4,800", status: "accepted",
+    routing_chain: [
+      { contractor: "ProBrush NYC", action: "routed", time: "2026-02-26T08:43:00", response_time: null },
+      { contractor: "ProBrush NYC", action: "declined", time: "2026-02-26T08:45:00", response_time: "2m" },
+      { contractor: "ColorWorks LLC", action: "rerouted", time: "2026-02-26T08:45:30", response_time: null },
+      { contractor: "ColorWorks LLC", action: "accepted", time: "2026-02-26T08:47:00", response_time: "1m 30s" },
+    ],
+  },
+  {
+    id: "J-0039", homeowner: "Sarah K.", type: "Full Apartment Paint", area: "Astoria, Queens",
+    appointment: "2026-03-01T11:00:00", created: "2026-02-26T07:30:00", urgency: "medium", estimated_value: "$8,500", status: "rerouting",
+    routing_chain: [
+      { contractor: "Mike's Painting Co", action: "routed", time: "2026-02-26T07:31:00", response_time: null },
+      { contractor: "Mike's Painting Co", action: "timeout", time: "2026-02-26T07:36:00", response_time: "5m (timeout)" },
+      { contractor: "Apex Painters", action: "rerouted", time: "2026-02-26T07:36:30", response_time: null },
+      { contractor: "Apex Painters", action: "declined", time: "2026-02-26T07:38:00", response_time: "1m 30s" },
+      { contractor: "Queens Paint Pros", action: "rerouted", time: "2026-02-26T07:38:30", response_time: null },
+    ],
+  },
+  {
+    id: "J-0038", homeowner: "James R.", type: "Bedroom Painting", area: "Park Slope, Brooklyn",
+    appointment: "2026-02-27T09:00:00", created: "2026-02-25T22:10:00", urgency: "critical", estimated_value: "$1,800", status: "lead_magnet",
+    routing_chain: [
+      { contractor: "BK Brush Masters", action: "routed", time: "2026-02-25T22:11:00", response_time: null },
+      { contractor: "BK Brush Masters", action: "timeout", time: "2026-02-25T22:16:00", response_time: "5m (timeout)" },
+      { contractor: "Slope Finishes", action: "rerouted", time: "2026-02-25T22:16:30", response_time: null },
+      { contractor: "Slope Finishes", action: "declined", time: "2026-02-25T22:18:00", response_time: "1m 30s" },
+      { contractor: null, action: "exhausted", time: "2026-02-25T22:18:30", response_time: null },
+      { contractor: "→ Lead Magnet Pool", action: "transferred", time: "2026-02-25T22:19:00", response_time: null },
+    ],
+  },
+  {
+    id: "J-0037", homeowner: "Chen W.", type: "Living Room + Hallway", area: "Flushing, Queens",
+    appointment: "2026-02-26T15:00:00", created: "2026-02-25T18:30:00", urgency: "high", estimated_value: "$2,900", status: "in_progress",
+    routing_chain: [
+      { contractor: "Fresh Coat Queens", action: "routed", time: "2026-02-25T18:31:00", response_time: null },
+      { contractor: "Fresh Coat Queens", action: "accepted", time: "2026-02-25T18:32:00", response_time: "1m" },
+      { contractor: "Fresh Coat Queens", action: "confirmed", time: "2026-02-25T18:45:00", response_time: null },
+    ],
+  },
+  {
+    id: "J-0036", homeowner: "Ana P.", type: "Bathroom Repaint", area: "Jackson Heights, Queens",
+    appointment: "2026-02-26T13:00:00", created: "2026-02-25T16:00:00", urgency: "medium", estimated_value: "$1,400", status: "completed",
+    routing_chain: [
+      { contractor: "JH Pro Painters", action: "routed", time: "2026-02-25T16:01:00", response_time: null },
+      { contractor: "JH Pro Painters", action: "accepted", time: "2026-02-25T16:02:30", response_time: "1m 30s" },
+      { contractor: "JH Pro Painters", action: "completed", time: "2026-02-26T15:00:00", response_time: null },
+    ],
+  },
+  {
+    id: "J-0035", homeowner: "Tom B.", type: "Exterior Trim Paint", area: "Bay Ridge, Brooklyn",
+    appointment: "2026-03-02T10:00:00", created: "2026-02-25T14:20:00", urgency: "low", estimated_value: "$2,200", status: "accepted",
+    routing_chain: [
+      { contractor: "Ridge Painting LLC", action: "routed", time: "2026-02-25T14:21:00", response_time: null },
+      { contractor: "Ridge Painting LLC", action: "accepted", time: "2026-02-25T14:22:00", response_time: "1m" },
+    ],
+  },
+  {
+    id: "J-0034", homeowner: "Kelly M.", type: "3BR Full Repaint", area: "Long Island City, Queens",
+    appointment: "2026-02-28T14:00:00", created: "2026-02-25T11:45:00", urgency: "medium", estimated_value: "$6,200", status: "rerouting",
+    routing_chain: [
+      { contractor: "LIC Painters Plus", action: "routed", time: "2026-02-25T11:46:00", response_time: null },
+      { contractor: "LIC Painters Plus", action: "declined", time: "2026-02-25T11:48:00", response_time: "2m" },
+      { contractor: "CityBrush NY", action: "rerouted", time: "2026-02-25T11:48:30", response_time: null },
+      { contractor: "CityBrush NY", action: "timeout", time: "2026-02-25T11:53:30", response_time: "5m (timeout)" },
+      { contractor: "Elite Coat NYC", action: "rerouted", time: "2026-02-25T11:54:00", response_time: null },
+    ],
+  },
+];
+
+function formatTime(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const now = new Date("2026-02-26T12:00:00");
+  const diff = now - d;
+  const mins = Math.floor(diff / 60000);
+  const hrs = Math.floor(mins / 60);
+  if (mins < 1) return "just now";
+  if (mins < 60) return mins + "m ago";
+  if (hrs < 24) return hrs + "h ago";
+  return Math.floor(hrs / 24) + "d ago";
+}
+
+function formatAppt(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const h = d.getHours();
+  const m = d.getMinutes();
+  const ampm = h >= 12 ? "PM" : "AM";
+  const h12 = h % 12 || 12;
+  return months[d.getMonth()] + " " + d.getDate() + " · " + h12 + ":" + String(m).padStart(2, "0") + " " + ampm;
+}
+
+function getUrgencyStyle(u) {
+  if (u === "critical") return { bg: C.red + "18", color: C.red, label: "CRITICAL" };
+  if (u === "high") return { bg: C.orange + "15", color: C.orange, label: "HIGH" };
+  if (u === "medium") return { bg: C.amber + "12", color: C.amber, label: "MEDIUM" };
+  return { bg: C.green + "10", color: C.green, label: "LOW" };
+}
+
+function getActionColor(action) {
+  if (action === "routed" || action === "rerouted") return C.blue;
+  if (action === "accepted" || action === "confirmed" || action === "completed") return C.green;
+  if (action === "declined") return C.red;
+  if (action === "timeout") return C.rose;
+  if (action === "exhausted") return C.red;
+  if (action === "transferred") return C.purple;
+  return C.textDim;
+}
+
+function getActionIcon(action) {
+  if (action === "routed") return "→";
+  if (action === "rerouted") return "↻";
+  if (action === "accepted") return "✓";
+  if (action === "confirmed") return "✓✓";
+  if (action === "completed") return "★";
+  if (action === "declined") return "✗";
+  if (action === "timeout") return "◌";
+  if (action === "exhausted") return "⚠";
+  if (action === "transferred") return "◈";
+  return "·";
+}
+
+function ChainNode({ step, isLast }) {
+  const color = getActionColor(step.action);
+  const icon = getActionIcon(step.action);
+  return React.createElement("div", { style: { display: "flex", alignItems: "stretch", gap: "0" } },
+    React.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", width: "24px", flexShrink: 0 } },
+      React.createElement("div", {
+        style: {
+          width: "20px", height: "20px", borderRadius: "50%",
+          background: color + "20", border: "1.5px solid " + color,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: "9px", color: color, flexShrink: 0,
+        }
+      }, icon),
+      !isLast && React.createElement("div", { style: { width: "1.5px", flex: 1, minHeight: "16px", background: C.border } })
+    ),
+    React.createElement("div", { style: { paddingLeft: "8px", paddingBottom: isLast ? "0" : "8px", flex: 1, minWidth: 0 } },
+      React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" } },
+        React.createElement("span", { style: { fontSize: "11px", fontWeight: 600, color: color, textTransform: "uppercase", letterSpacing: "0.5px" } }, step.action),
+        step.response_time && React.createElement("span", {
+          style: {
+            fontSize: "9px", padding: "1px 6px", borderRadius: "8px",
+            background: step.response_time.includes("timeout") ? C.rose + "18" : C.green + "15",
+            color: step.response_time.includes("timeout") ? C.rose : C.green,
+          }
+        }, step.response_time)
+      ),
+      React.createElement("div", { style: { fontSize: "11px", color: C.textMid, marginTop: "1px" } },
+        step.contractor || "System",
+        step.time && React.createElement("span", { style: { color: C.textDim, marginLeft: "6px", fontSize: "9px" } }, formatTime(step.time))
+      )
+    )
+  );
+}
+
+function JobTile({ job, isExpanded, onToggle }) {
+  const st = STATUS[job.status] || STATUS.pending;
+  const urg = getUrgencyStyle(job.urgency);
+  const chainLength = job.routing_chain.length;
+  const reroutes = job.routing_chain.filter(function(s) { return s.action === "rerouted"; }).length;
+  const declines = job.routing_chain.filter(function(s) { return s.action === "declined"; }).length;
+  const timeouts = job.routing_chain.filter(function(s) { return s.action === "timeout"; }).length;
+
+  return React.createElement("div", {
+    style: {
+      background: C.surface,
+      border: "1px solid " + (isExpanded ? st.color + "50" : C.border),
+      borderRadius: "8px", overflow: "hidden", transition: "all 0.2s ease",
+    }
+  },
+    React.createElement("div", { style: { height: "2px", background: st.color } }),
+    React.createElement("div", {
+      onClick: onToggle,
+      style: { padding: "12px 14px", cursor: "pointer", display: "flex", flexDirection: "column", gap: "8px" }
+    },
+      // Row 1
+      React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "6px" } },
+        React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "8px" } },
+          React.createElement("span", { style: { fontSize: "13px", fontWeight: 700, color: C.text, fontFamily: "monospace" } }, job.id),
+          React.createElement("span", { style: { fontSize: "9px", fontWeight: 700, padding: "2px 8px", borderRadius: "10px", background: st.color + "18", color: st.color, letterSpacing: "0.5px" } }, st.icon + " " + st.label),
+          React.createElement("span", { style: { fontSize: "9px", fontWeight: 600, padding: "2px 7px", borderRadius: "10px", background: urg.bg, color: urg.color } }, urg.label)
+        ),
+        React.createElement("span", { style: { fontSize: "10px", color: C.textDim } }, formatTime(job.created))
+      ),
+      // Row 2
+      React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "4px" } },
+        React.createElement("div", null,
+          React.createElement("span", { style: { fontSize: "12px", fontWeight: 600, color: C.text } }, job.homeowner),
+          React.createElement("span", { style: { fontSize: "11px", color: C.textDim, marginLeft: "8px" } }, job.type)
+        ),
+        React.createElement("span", { style: { fontSize: "12px", fontWeight: 700, color: C.green } }, job.estimated_value)
+      ),
+      // Row 3
+      React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "4px" } },
+        React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "10px" } },
+          React.createElement("span", { style: { fontSize: "10px", color: C.cyan } }, job.area),
+          React.createElement("span", { style: { fontSize: "10px", color: C.textDim } }, "Appt: " + formatAppt(job.appointment))
+        ),
+        React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "6px" } },
+          chainLength > 1 && React.createElement("span", { style: { fontSize: "9px", padding: "1px 6px", borderRadius: "8px", background: C.blue + "12", color: C.blue } }, chainLength + " steps"),
+          reroutes > 0 && React.createElement("span", { style: { fontSize: "9px", padding: "1px 6px", borderRadius: "8px", background: C.orange + "12", color: C.orange } }, reroutes + " reroute" + (reroutes > 1 ? "s" : "")),
+          declines > 0 && React.createElement("span", { style: { fontSize: "9px", padding: "1px 6px", borderRadius: "8px", background: C.red + "12", color: C.red } }, declines + " decline" + (declines > 1 ? "s" : "")),
+          timeouts > 0 && React.createElement("span", { style: { fontSize: "9px", padding: "1px 6px", borderRadius: "8px", background: C.rose + "12", color: C.rose } }, timeouts + " timeout" + (timeouts > 1 ? "s" : "")),
+          React.createElement("span", { style: { fontSize: "12px", color: C.textDim, transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s", display: "inline-block" } }, "▾")
+        )
+      )
+    ),
+    isExpanded && React.createElement("div", {
+      style: { padding: "0 14px 14px 14px", borderTop: "1px solid " + C.border, paddingTop: "12px" }
+    },
+      React.createElement("div", { style: { fontSize: "9px", letterSpacing: "2px", color: C.textDim, marginBottom: "10px", fontWeight: 700 } }, "ROUTING CHAIN"),
+      job.routing_chain.map(function(step, i) {
+        return React.createElement(ChainNode, { key: i, step: step, isLast: i === job.routing_chain.length - 1 });
+      })
+    )
+  );
+}
+
+function App() {
+  const [expandedJob, setExpandedJob] = useState(null);
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [sortOrder, setSortOrder] = useState("newest");
+
+  var toggle = function(id) { setExpandedJob(expandedJob === id ? null : id); };
+
+  var filtered = MOCK_JOBS
+    .filter(function(j) { return filterStatus === "all" || j.status === filterStatus; })
+    .sort(function(a, b) {
+      var da = new Date(a.created);
+      var db = new Date(b.created);
+      return sortOrder === "newest" ? db - da : da - db;
+    });
+
+  var stats = {
+    total: MOCK_JOBS.length,
+    active: MOCK_JOBS.filter(function(j) { return ["routed", "rerouting", "pending"].indexOf(j.status) >= 0; }).length,
+    accepted: MOCK_JOBS.filter(function(j) { return ["accepted", "in_progress"].indexOf(j.status) >= 0; }).length,
+    completed: MOCK_JOBS.filter(function(j) { return j.status === "completed"; }).length,
+    lead_magnet: MOCK_JOBS.filter(function(j) { return j.status === "lead_magnet"; }).length,
+    failed: MOCK_JOBS.filter(function(j) { return j.status === "failed"; }).length,
+    total_reroutes: MOCK_JOBS.reduce(function(sum, j) { return sum + j.routing_chain.filter(function(s) { return s.action === "rerouted"; }).length; }, 0),
+    avg_chain: (MOCK_JOBS.reduce(function(sum, j) { return sum + j.routing_chain.length; }, 0) / MOCK_JOBS.length).toFixed(1),
+  };
+
+  var statusFilters = [
+    { key: "all", label: "ALL", color: C.text },
+    { key: "routed", label: "ROUTED", color: C.blue },
+    { key: "rerouting", label: "REROUTING", color: C.orange },
+    { key: "accepted", label: "ACCEPTED", color: C.green },
+    { key: "in_progress", label: "IN PROGRESS", color: C.cyan },
+    { key: "completed", label: "COMPLETED", color: C.lime },
+    { key: "lead_magnet", label: "LEAD MAGNET", color: C.purple },
+    { key: "declined", label: "DECLINED", color: C.red },
+  ];
+
+  return React.createElement("div", {
+    style: {
+      background: C.bg, minHeight: "100vh", color: C.text,
+      fontFamily: "'SF Mono', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace",
+      padding: "24px 16px", maxWidth: "900px", margin: "0 auto",
+    }
+  },
+    // Header
+    React.createElement("div", { style: { marginBottom: "24px" } },
+      React.createElement("div", { style: { fontSize: "8px", letterSpacing: "5px", color: C.textDim, marginBottom: "6px" } }, "HOME RENO HOTSPOT"),
+      React.createElement("h1", { style: { fontSize: "22px", fontWeight: 700, margin: "0 0 4px 0" } }, "Operations Dashboard"),
+      React.createElement("div", { style: { fontSize: "10px", color: C.textDim } }, "All jobs · Routing chains · Real-time status")
+    ),
+
+    // Stats
+    React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px", marginBottom: "20px" } },
+      [
+        { label: "Total Jobs", value: stats.total, color: C.text },
+        { label: "Active Routing", value: stats.active, color: C.orange },
+        { label: "Accepted / In Progress", value: stats.accepted, color: C.green },
+        { label: "Lead Magnet Pool", value: stats.lead_magnet, color: C.purple },
+        { label: "Completed", value: stats.completed, color: C.lime },
+        { label: "Total Reroutes", value: stats.total_reroutes, color: C.orange },
+        { label: "Avg Chain Length", value: stats.avg_chain, color: C.blue },
+        { label: "Unmatched", value: stats.failed, color: C.red },
+      ].map(function(s, i) {
+        return React.createElement("div", { key: i, style: { background: C.surface, border: "1px solid " + C.border, borderRadius: "6px", padding: "10px" } },
+          React.createElement("div", { style: { fontSize: "8px", color: C.textDim, letterSpacing: "0.8px", textTransform: "uppercase" } }, s.label),
+          React.createElement("div", { style: { fontSize: "20px", fontWeight: 700, color: s.color, marginTop: "2px" } }, s.value)
+        );
+      })
+    ),
+
+    // Filters
+    React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px", flexWrap: "wrap", gap: "8px" } },
+      React.createElement("div", { style: { display: "flex", gap: "4px", flexWrap: "wrap" } },
+        statusFilters.map(function(f) {
+          return React.createElement("button", {
+            key: f.key, onClick: function() { setFilterStatus(f.key); },
+            style: {
+              background: filterStatus === f.key ? f.color + "15" : "transparent",
+              border: "1px solid " + (filterStatus === f.key ? f.color : C.border),
+              borderRadius: "14px", padding: "4px 12px",
+              color: filterStatus === f.key ? f.color : C.textDim,
+              fontSize: "9px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+            }
+          }, f.label);
+        })
+      ),
+      React.createElement("div", { style: { display: "flex", gap: "4px" } },
+        React.createElement("button", {
+          onClick: function() { setSortOrder("newest"); },
+          style: {
+            background: sortOrder === "newest" ? C.blue + "15" : "transparent",
+            border: "1px solid " + (sortOrder === "newest" ? C.blue : C.border),
+            borderRadius: "14px", padding: "4px 12px",
+            color: sortOrder === "newest" ? C.blue : C.textDim,
+            fontSize: "9px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+          }
+        }, "NEWEST FIRST"),
+        React.createElement("button", {
+          onClick: function() { setSortOrder("oldest"); },
+          style: {
+            background: sortOrder === "oldest" ? C.blue + "15" : "transparent",
+            border: "1px solid " + (sortOrder === "oldest" ? C.blue : C.border),
+            borderRadius: "14px", padding: "4px 12px",
+            color: sortOrder === "oldest" ? C.blue : C.textDim,
+            fontSize: "9px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+          }
+        }, "OLDEST FIRST")
+      )
+    ),
+
+    // Count
+    React.createElement("div", {
+      style: { fontSize: "9px", letterSpacing: "2px", color: C.textDim, marginBottom: "12px", paddingBottom: "8px", borderBottom: "1px solid " + C.border }
+    },
+      "SHOWING " + filtered.length + " OF " + MOCK_JOBS.length + " JOBS",
+      filterStatus !== "all" && React.createElement("span", {
+        style: { color: (STATUS[filterStatus] || {}).color || C.text, marginLeft: "6px" }
+      }, "— " + ((STATUS[filterStatus] || {}).label || filterStatus.toUpperCase()))
+    ),
+
+    // Job Tiles
+    React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "8px" } },
+      filtered.map(function(job) {
+        return React.createElement(JobTile, {
+          key: job.id, job: job,
+          isExpanded: expandedJob === job.id,
+          onToggle: function() { toggle(job.id); },
+        });
+      })
+    ),
+
+    filtered.length === 0 && React.createElement("div", {
+      style: { textAlign: "center", padding: "40px 20px", color: C.textDim, fontSize: "12px" }
+    }, "No jobs matching this filter."),
+
+    // Legend
+    React.createElement("div", { style: { marginTop: "24px", paddingTop: "16px", borderTop: "1px solid " + C.border } },
+      React.createElement("div", { style: { fontSize: "9px", letterSpacing: "2px", color: C.textDim, marginBottom: "10px" } }, "ROUTING CHAIN LEGEND"),
+      React.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: "8px" } },
+        [
+          { icon: "→", label: "Routed", color: C.blue },
+          { icon: "↻", label: "Rerouted", color: C.blue },
+          { icon: "✓", label: "Accepted", color: C.green },
+          { icon: "✓✓", label: "Confirmed", color: C.green },
+          { icon: "★", label: "Completed", color: C.lime },
+          { icon: "✗", label: "Declined", color: C.red },
+          { icon: "◌", label: "Timeout", color: C.rose },
+          { icon: "⚠", label: "Exhausted", color: C.red },
+          { icon: "◈", label: "→ Lead Magnet", color: C.purple },
+        ].map(function(l, i) {
+          return React.createElement("div", { key: i, style: { display: "flex", alignItems: "center", gap: "4px" } },
+            React.createElement("span", {
+              style: {
+                width: "18px", height: "18px", borderRadius: "50%",
+                background: l.color + "20", border: "1px solid " + l.color,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: "8px", color: l.color,
+              }
+            }, l.icon),
+            React.createElement("span", { style: { fontSize: "9px", color: C.textDim } }, l.label)
+          );
+        })
+      )
+    ),
+
+    // Footer
+    React.createElement("div", {
+      style: { textAlign: "center", marginTop: "24px", paddingTop: "12px", borderTop: "1px solid " + C.border, fontSize: "8px", color: C.textDim, letterSpacing: "2px" }
+    },
+      "HOME RENO HOTSPOT — OPERATIONS DASHBOARD v1.0",
+      React.createElement("br"),
+      React.createElement("span", { style: { color: C.green } }, "EVERY QUALIFIED LEAD GETS FILLED · NO EXCEPTIONS")
+    )
+  );
+}
+
+ReactDOM.render(React.createElement(App), document.getElementById("root"));
+</script>
+</body>
+</html>

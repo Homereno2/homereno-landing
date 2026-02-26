@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Home Reno Hotspot — Complete Systems Architecture</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #04070d; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0a1019; }
+  ::-webkit-scrollbar-thumb { background: #253a6a; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
+
+const C = {
+  bg: "#04070d", surface: "#0a1019", surfaceHover: "#101a2a",
+  border: "#162040", borderActive: "#253a6a",
+  text: "#dce4f0", textDim: "#5a6f90", textMid: "#8899b5",
+  cyan: "#06b6d4", blue: "#3b82f6", green: "#10b981",
+  amber: "#f59e0b", purple: "#8b5cf6", pink: "#ec4899",
+  orange: "#f97316", red: "#ef4444", teal: "#14b8a6",
+  lime: "#84cc16", indigo: "#6366f1", rose: "#f43f5e",
+};
+
+const engines = [
+  { id: "lead", label: "ENGINE 1 — LEAD ENGINE", desc: "UpHex → Jackie → Qualification", color: C.cyan, stocks: [1, 2, 3, 10] },
+  { id: "routing", label: "ENGINE 2 — ROUTING ENGINE", desc: "Assignment + Reroute + Enforcement + Scorecard", color: C.green, stocks: [4, 7, 8, 9] },
+  { id: "contractor", label: "ENGINE 3 — CONTRACTOR ENGINE", desc: "Activation → Capacity → Performance → ML", color: C.amber, stocks: [5, 6, 11, 12] },
+];
+
+const stockDefs = [
+  {
+    id: "s1", num: 1, label: "Homeowner Lead Pool", engine: "lead", color: C.cyan,
+    desc: "All homeowners who have entered the system — contact records, conversations awaiting routing or booking. The total addressable demand side.",
+    substocks: [],
+    flowsIn: [
+      { label: "Facebook Lead Ads (UpHex) → Lead Intake", key: true },
+      { label: "Lead Magnet ads funded by Tom (early stage)" },
+      { label: "Contractor-funded ads (scaling stage)" },
+      { label: "Organic referrals (later stage)" },
+    ],
+    flowsOut: [
+      { label: "Qualification (Jackie AI)", key: true },
+      { label: "Routing to contractors" },
+      { label: "Unqualified or dead leads (exits)" },
+    ],
+  },
+  {
+    id: "s2", num: 2, label: "Conversational Pipeline", engine: "lead", color: C.blue,
+    desc: "All homeowners currently in an active Jackie text conversation. Where AI appointment extraction, intent detection, and next-step gating happen.",
+    substocks: [],
+    flowsIn: [
+      { label: "Lead enters → Jackie sends first SMS", key: true },
+      { label: "Homeowner replies" },
+      { label: "Jackie loops follow-up logic" },
+    ],
+    flowsOut: [
+      { label: "Appointment booked → stock decreases", key: true },
+      { label: "Lead disqualified / abandoned" },
+      { label: "Hand-off to Contractor Assignment Engine" },
+    ],
+  },
+  {
+    id: "s3", num: 3, label: "Qualified Homeowners", engine: "lead", color: C.teal,
+    desc: "Leads meeting minimum qualification: real address, real renovation need, booking intent, timeframe. This is where the GTM advantage lives — deterministic qualification at scale.",
+    substocks: [],
+    flowsIn: [
+      { label: "Jackie → lead qualifies", key: true },
+      { label: "Manual override (occasionally)" },
+    ],
+    flowsOut: [
+      { label: "Routing Engine selects contractor", key: true },
+      { label: "Reroute events (if contractor fails)" },
+    ],
+  },
+  {
+    id: "s4", num: 4, label: "Active Jobs (Routed)", engine: "routing", color: C.green,
+    desc: "Jobs matched to contractors but not yet completed. The entire job-routing microservice, scorecarding, and contractor availability logic operate here.",
+    substocks: [],
+    flowsIn: [
+      { label: "Routing Engine assigns contractor", key: true },
+      { label: "Reroute Engine assigns new contractor" },
+    ],
+    flowsOut: [
+      { label: "Contractor confirms → job moves forward", key: true },
+      { label: "Contractor declines/ignores → backflow to reroute" },
+      { label: "Homeowner cancels / unreachable" },
+      { label: "Job completed" },
+    ],
+  },
+  {
+    id: "s5", num: 5, label: "Contractor Pool", engine: "contractor", color: C.amber,
+    desc: "The foundation of supply for the marketplace. Deeply important because the routing engine interacts with it constantly.",
+    substocks: ["Verified", "Activated", "Available", "Scorecarded", "Geo-clustered"],
+    flowsIn: [
+      { label: "Manual onboarding (early stage)", key: true },
+      { label: "Stripe subscription activation" },
+      { label: "Automated onboarding sequence" },
+      { label: "Enrichment: Google Places, SODA, Yelp, licensing data" },
+    ],
+    flowsOut: [
+      { label: "Churn" },
+      { label: "Suspension (bad performance scorecard)" },
+      { label: "Unavailable capacity (temporarily removed)" },
+    ],
+  },
+  {
+    id: "s6", num: 6, label: "Contractor Capacity Inventory", engine: "contractor", color: C.purple,
+    desc: "Real-time understanding of jobs a contractor can take, already has, and how responsive they are. Capacity is the heartbeat of the entire system.",
+    substocks: [],
+    flowsIn: [
+      { label: "Capacity Cron increasing availability (decay model)", key: true },
+      { label: "Contractors finishing jobs" },
+      { label: "Manual resets" },
+    ],
+    flowsOut: [
+      { label: "Jobs assigned", key: true },
+      { label: "Contractor declining/failing (capacity penalty)" },
+      { label: "Timeout penalties" },
+    ],
+  },
+  {
+    id: "s7", num: 7, label: "Routing Engine State", engine: "routing", color: C.lime,
+    desc: "Holds job routing attempts, current contractor candidate, fallback list, and scores for each contractor. The core dynamic system that differentiates from a simple ad agency.",
+    substocks: [],
+    flowsIn: [
+      { label: "New job enters routing", key: true },
+      { label: "Reroute Engine triggered" },
+      { label: "Contractor response classification events" },
+    ],
+    flowsOut: [
+      { label: "Contractor confirmed → job shifts to Active Jobs", key: true },
+      { label: "Exhausted contractors → job marked failed" },
+      { label: "Timeout → fallback flow" },
+    ],
+  },
+  {
+    id: "s8", num: 8, label: "Contractor Communication State", engine: "routing", color: C.pink,
+    desc: "All outbound messages, inbound replies, confirmations, declines, appointment reminders, enforcement follow-ups. Where the contractor-facing AI bot lives.",
+    substocks: [],
+    flowsIn: [
+      { label: "Jackie → Contractor handoff", key: true },
+      { label: "Appointment booked → push to contractor" },
+      { label: "Enforcement bot" },
+    ],
+    flowsOut: [
+      { label: "Confirmed job", key: true },
+      { label: "Declined job → backflow to Reroute Engine" },
+      { label: "No response → timeout flow" },
+    ],
+  },
+  {
+    id: "s9", num: 9, label: "Scorecard System", engine: "routing", color: C.indigo,
+    desc: "Accumulates responsiveness, call compliance, appointment reliability, homeowner satisfaction, success/failure counts. Becomes part of the ML model later.",
+    substocks: [],
+    flowsIn: [
+      { label: "Contractor confirmations", key: true },
+      { label: "Contractor misses" },
+      { label: "Homeowner feedback" },
+      { label: "Routing engine outcomes" },
+      { label: "Nudge retries" },
+    ],
+    flowsOut: [
+      { label: "Score decay over time" },
+      { label: "Contractor suspension" },
+      { label: "Improved ranking in routing algorithm", key: true },
+    ],
+  },
+  {
+    id: "s10", num: 10, label: "Marketing Intelligence", engine: "lead", color: C.rose,
+    desc: "Master Pixel + CAPI Data. THIS IS THE MOAT. UpHex fuels this stock. Every signal makes Facebook smarter, leads cheaper, audiences sharper.",
+    substocks: [],
+    flowsIn: [
+      { label: "Every contractor's ads → pixel improvement", key: true },
+      { label: "Offline conversions → CAPI" },
+      { label: "Appointment events" },
+      { label: "Lead quality feedback loops" },
+    ],
+    flowsOut: [
+      { label: "Algorithmic learning into Facebook", key: true },
+      { label: "Better lookalike audiences" },
+      { label: "Cheaper leads over time" },
+    ],
+  },
+  {
+    id: "s11", num: 11, label: "Revenue Flow (MRR)", engine: "contractor", color: C.orange,
+    desc: "The financial engine — subscription revenue, contractor-funded ad spend, lead magnet ROI, and future job routing revenue.",
+    substocks: ["Subscription revenue (Stripe)", "Contractor-funded ad spend", "Lead magnet ROI", "Job routing revenue (future)"],
+    flowsIn: [
+      { label: "Contractor subscriptions", key: true },
+      { label: "Contractor upgrades (higher tiers)" },
+      { label: "Job routing revenue" },
+      { label: "Platform fees" },
+    ],
+    flowsOut: [
+      { label: "Ad spend (lead magnet phase)" },
+      { label: "Infrastructure costs" },
+      { label: "Growth reinvestment (80%)", key: true },
+      { label: "Payroll (future)" },
+    ],
+  },
+  {
+    id: "s12", num: 12, label: "Contractor Intelligence Layer", engine: "contractor", color: C.purple,
+    desc: "ML Memory + Historical Data. The long-term moat — a private dataset of job summaries, message histories, classification logs, routing outcomes, and scorecards.",
+    substocks: [],
+    flowsIn: [
+      { label: "Each job attempt", key: true },
+      { label: "Each contractor response" },
+      { label: "Each appointment outcome" },
+      { label: "Each performance metric" },
+    ],
+    flowsOut: [
+      { label: "Better routing decisions (predictive)", key: true },
+      { label: "Better job-to-contractor matching" },
+      { label: "Better pricing models in future" },
+    ],
+  },
+];
+
+const crossFlows = [
+  { from: "s1", to: "s2", label: "New lead triggers Jackie conversation", color: C.cyan },
+  { from: "s2", to: "s3", label: "Jackie qualifies → enters pre-routing pool", color: C.blue },
+  { from: "s3", to: "s7", label: "Qualified lead enters routing engine", color: C.green },
+  { from: "s7", to: "s4", label: "Contractor selected → active job created", color: C.lime },
+  { from: "s7", to: "s5", label: "Routing queries contractor pool for candidates", color: C.lime },
+  { from: "s7", to: "s6", label: "Routing checks capacity before assignment", color: C.purple },
+  { from: "s4", to: "s8", label: "Job assigned → contractor notified (magic link SMS)", color: C.pink },
+  { from: "s8", to: "s7", label: "Decline/timeout → backflow to reroute engine", color: C.pink },
+  { from: "s8", to: "s9", label: "Response data feeds scorecard", color: C.indigo },
+  { from: "s4", to: "s9", label: "Job outcomes feed contractor performance", color: C.indigo },
+  { from: "s9", to: "s7", label: "Scores influence routing decisions", color: C.indigo },
+  { from: "s9", to: "s5", label: "Bad scores → suspension from contractor pool", color: C.red },
+  { from: "s9", to: "s12", label: "Performance data feeds ML memory", color: C.purple },
+  { from: "s4", to: "s10", label: "Appointment events → CAPI → pixel learning", color: C.rose },
+  { from: "s1", to: "s10", label: "Lead quality signals → pixel optimization", color: C.rose },
+  { from: "s10", to: "s1", label: "Smarter pixel → cheaper, better leads", color: C.rose },
+  { from: "s5", to: "s11", label: "Activated contractors → subscription revenue", color: C.orange },
+  { from: "s11", to: "s1", label: "80% reinvestment → funds more lead acquisition", color: C.orange },
+  { from: "s4", to: "s12", label: "Every job attempt feeds ML intelligence", color: C.purple },
+  { from: "s12", to: "s7", label: "ML predictions improve routing accuracy", color: C.purple },
+  { from: "s6", to: "s5", label: "At capacity → contractor temporarily removed", color: C.purple },
+  { from: "s4", to: "s6", label: "Assigned jobs consume capacity", color: C.purple },
+];
+
+function StockCard({ stock, isSelected, isConnected, dimmed, onClick }) {
+  const engine = engines.find(e => e.id === stock.engine);
+  return React.createElement("div", {
+    onClick: () => onClick(stock.id),
+    style: {
+      background: isSelected ? stock.color + "0a" : C.surface,
+      border: "1px solid " + (isSelected ? stock.color : isConnected ? stock.color + "40" : C.border),
+      borderRadius: "8px", padding: "14px 16px", cursor: "pointer",
+      transition: "all 0.2s ease", opacity: dimmed ? 0.25 : 1,
+      position: "relative", overflow: "hidden",
+    }
+  },
+    isSelected && React.createElement("div", { style: { position: "absolute", top: 0, left: 0, right: 0, height: "2px", background: stock.color } }),
+    React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" } },
+      React.createElement("span", { style: { fontSize: "9px", fontWeight: 700, padding: "2px 7px", borderRadius: "10px", background: stock.color + "18", color: stock.color, letterSpacing: "0.5px" } }, "STOCK " + stock.num),
+      React.createElement("span", { style: { fontSize: "8px", padding: "2px 6px", borderRadius: "8px", background: engine.color + "10", color: engine.color, fontWeight: 600 } }, engine.id.toUpperCase())
+    ),
+    React.createElement("div", { style: { fontSize: "13px", fontWeight: 700, color: isSelected ? stock.color : C.text, marginBottom: "5px" } }, stock.label),
+    React.createElement("div", { style: { fontSize: "10px", color: C.textDim, lineHeight: 1.5 } }, stock.desc),
+    stock.substocks.length > 0 && React.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: "4px", marginTop: "8px" } },
+      stock.substocks.map((ss, i) => React.createElement("span", { key: i, style: { fontSize: "9px", padding: "2px 8px", borderRadius: "8px", background: stock.color + "0c", border: "1px solid " + stock.color + "20", color: stock.color } }, ss))
+    )
+  );
+}
+
+function FlowTag({ flow, type }) {
+  return React.createElement("div", { style: { display: "flex", alignItems: "flex-start", gap: "6px", padding: "3px 0" } },
+    React.createElement("span", { style: { fontSize: "10px", color: type === "in" ? C.green : C.red, marginTop: "2px", minWidth: "12px" } }, type === "in" ? "↑" : "↓"),
+    React.createElement("span", { style: { fontSize: "11px", color: flow.key ? C.text : C.textMid, lineHeight: 1.4, fontWeight: flow.key ? 600 : 400 } }, flow.label)
+  );
+}
+
+function CrossFlowRow({ flow, highlighted }) {
+  const from = stockDefs.find(s => s.id === flow.from);
+  const to = stockDefs.find(s => s.id === flow.to);
+  return React.createElement("div", {
+    style: {
+      display: "flex", alignItems: "flex-start", gap: "8px",
+      padding: "6px 10px", borderRadius: "5px",
+      borderLeft: "2px solid " + (highlighted ? flow.color : C.border),
+      background: highlighted ? flow.color + "06" : "transparent",
+      opacity: highlighted ? 1 : 0.3, transition: "all 0.2s ease",
+    }
+  },
+    React.createElement("span", { style: { fontSize: "12px", color: flow.color, marginTop: "1px" } }, "→"),
+    React.createElement("div", null,
+      React.createElement("div", { style: { fontSize: "9px", color: flow.color, fontWeight: 700, letterSpacing: "0.3px" } },
+        "[" + from?.num + "] " + from?.label + " → [" + to?.num + "] " + to?.label),
+      React.createElement("div", { style: { fontSize: "11px", color: highlighted ? C.text : C.textDim, marginTop: "2px" } }, flow.label)
+    )
+  );
+}
+
+function App() {
+  const [selectedStock, setSelectedStock] = useState(null);
+  const [activeEngine, setActiveEngine] = useState(null);
+
+  const handleClick = (id) => setSelectedStock(selectedStock === id ? null : id);
+
+  const connectedCrossFlows = selectedStock
+    ? crossFlows.filter(f => f.from === selectedStock || f.to === selectedStock)
+    : activeEngine
+    ? crossFlows.filter(f => {
+        const from = stockDefs.find(s => s.id === f.from);
+        const to = stockDefs.find(s => s.id === f.to);
+        return from?.engine === activeEngine || to?.engine === activeEngine;
+      })
+    : crossFlows;
+
+  const connectedIds = selectedStock
+    ? new Set([selectedStock, ...connectedCrossFlows.map(f => f.from), ...connectedCrossFlows.map(f => f.to)])
+    : null;
+
+  const selectedStockData = stockDefs.find(s => s.id === selectedStock);
+
+  return React.createElement("div", {
+    style: {
+      background: C.bg, minHeight: "100vh", color: C.text,
+      fontFamily: "'SF Mono', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace",
+      padding: "28px 16px",
+    }
+  },
+    // Header
+    React.createElement("div", { style: { textAlign: "center", marginBottom: "28px" } },
+      React.createElement("div", { style: { fontSize: "8px", letterSpacing: "6px", color: C.textDim, marginBottom: "8px" } }, "SYSTEMS THINKING MODEL"),
+      React.createElement("h1", { style: { fontSize: "26px", fontWeight: 700, margin: "0 0 6px 0", letterSpacing: "-0.5px" } }, "HOME RENO HOTSPOT"),
+      React.createElement("div", { style: { fontSize: "11px", color: C.textDim, maxWidth: "600px", margin: "0 auto", lineHeight: 1.5 } },
+        "12 Stocks · 3 Engines · " + crossFlows.length + " Cross-System Flows — Click any stock to trace all connections")
+    ),
+
+    // Engine Filters
+    React.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: "6px", justifyContent: "center", marginBottom: "28px" } },
+      React.createElement("button", {
+        onClick: () => { setActiveEngine(null); setSelectedStock(null); },
+        style: {
+          background: !activeEngine ? C.surfaceHover : "transparent",
+          border: "1px solid " + (!activeEngine ? C.blue : C.border),
+          borderRadius: "16px", padding: "6px 16px",
+          color: !activeEngine ? C.blue : C.textDim,
+          fontSize: "10px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+        }
+      }, "ALL ENGINES"),
+      engines.map(e => React.createElement("button", {
+        key: e.id,
+        onClick: () => { setActiveEngine(activeEngine === e.id ? null : e.id); setSelectedStock(null); },
+        style: {
+          background: activeEngine === e.id ? e.color + "10" : "transparent",
+          border: "1px solid " + (activeEngine === e.id ? e.color : C.border),
+          borderRadius: "16px", padding: "6px 16px",
+          color: activeEngine === e.id ? e.color : C.textDim,
+          fontSize: "10px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+        }
+      }, e.label))
+    ),
+
+    // Engine Descriptions
+    React.createElement("div", { style: { display: "flex", gap: "10px", maxWidth: "1200px", margin: "0 auto 24px auto", flexWrap: "wrap", justifyContent: "center" } },
+      engines.filter(e => !activeEngine || activeEngine === e.id).map(e =>
+        React.createElement("div", { key: e.id, style: { flex: "1 1 250px", maxWidth: "380px", background: e.color + "06", border: "1px solid " + e.color + "20", borderRadius: "6px", padding: "10px 14px" } },
+          React.createElement("div", { style: { fontSize: "10px", fontWeight: 700, color: e.color, letterSpacing: "1px" } }, e.label),
+          React.createElement("div", { style: { fontSize: "10px", color: C.textMid, marginTop: "3px" } }, e.desc),
+          React.createElement("div", { style: { fontSize: "9px", color: C.textDim, marginTop: "4px" } },
+            "Stocks: " + stockDefs.filter(s => s.engine === e.id).map(s => "[" + s.num + "]").join(" "))
+        )
+      )
+    ),
+
+    // Main Layout
+    React.createElement("div", { style: { display: "flex", gap: "20px", maxWidth: "1300px", margin: "0 auto", flexWrap: "wrap" } },
+
+      // STOCKS
+      React.createElement("div", { style: { flex: "1 1 420px", minWidth: "340px" } },
+        React.createElement("div", { style: { fontSize: "9px", letterSpacing: "3px", color: C.textDim, marginBottom: "14px", paddingBottom: "6px", borderBottom: "1px solid " + C.border } },
+          "▣ STOCKS — ACCUMULATIONS (" + stockDefs.filter(s => !activeEngine || s.engine === activeEngine).length + " of 12)"),
+        React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "8px" } },
+          stockDefs.filter(s => !activeEngine || s.engine === activeEngine).map(stock => {
+            const isSelected = selectedStock === stock.id;
+            const isConnected = connectedIds ? connectedIds.has(stock.id) : true;
+            const dimmed = connectedIds && !isConnected && !isSelected;
+            return React.createElement(StockCard, { key: stock.id, stock, isSelected, isConnected, dimmed, onClick: handleClick });
+          })
+        )
+      ),
+
+      // FLOWS
+      React.createElement("div", { style: { flex: "1 1 460px", minWidth: "360px" } },
+
+        // Selected Stock Detail
+        selectedStockData && React.createElement("div", {
+          style: { background: selectedStockData.color + "08", border: "1px solid " + selectedStockData.color + "30", borderRadius: "8px", padding: "16px", marginBottom: "16px" }
+        },
+          React.createElement("div", { style: { fontSize: "10px", fontWeight: 700, color: selectedStockData.color, letterSpacing: "1.5px", marginBottom: "12px" } },
+            "STOCK " + selectedStockData.num + " — " + selectedStockData.label.toUpperCase() + " — INTERNAL FLOWS"),
+          React.createElement("div", { style: { display: "flex", gap: "20px", flexWrap: "wrap" } },
+            React.createElement("div", { style: { flex: "1 1 200px" } },
+              React.createElement("div", { style: { fontSize: "9px", fontWeight: 700, color: C.green, letterSpacing: "1px", marginBottom: "6px" } },
+                "↑ FLOWS IN (" + selectedStockData.flowsIn.length + ")"),
+              selectedStockData.flowsIn.map((f, i) => React.createElement(FlowTag, { key: i, flow: f, type: "in" }))
+            ),
+            React.createElement("div", { style: { flex: "1 1 200px" } },
+              React.createElement("div", { style: { fontSize: "9px", fontWeight: 700, color: C.red, letterSpacing: "1px", marginBottom: "6px" } },
+                "↓ FLOWS OUT (" + selectedStockData.flowsOut.length + ")"),
+              selectedStockData.flowsOut.map((f, i) => React.createElement(FlowTag, { key: i, flow: f, type: "out" }))
+            )
+          )
+        ),
+
+        // Cross-System Flows
+        React.createElement("div", { style: { fontSize: "9px", letterSpacing: "3px", color: C.textDim, marginBottom: "14px", paddingBottom: "6px", borderBottom: "1px solid " + C.border } },
+          "→ CROSS-SYSTEM FLOWS (" + connectedCrossFlows.length + " of " + crossFlows.length + ")",
+          selectedStock && React.createElement("span", { style: { color: selectedStockData?.color, marginLeft: "6px" } },
+            "— [" + selectedStockData?.num + "] " + selectedStockData?.label)
+        ),
+
+        React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "4px", marginBottom: "20px" } },
+          connectedCrossFlows.map((flow, i) =>
+            React.createElement(CrossFlowRow, { key: i, flow, highlighted: !selectedStock || flow.from === selectedStock || flow.to === selectedStock })
+          )
+        ),
+
+        // Flywheel
+        React.createElement("div", { style: { background: C.orange + "06", border: "1px solid " + C.orange + "20", borderRadius: "6px", padding: "14px", marginBottom: "12px" } },
+          React.createElement("div", { style: { fontSize: "9px", letterSpacing: "2px", color: C.orange, fontWeight: 700, marginBottom: "8px" } }, "⟳ THE COMPOUNDING FLYWHEEL"),
+          React.createElement("div", { style: { fontSize: "11px", color: C.textMid, lineHeight: 1.8 } },
+            "[11] Revenue → 80% reinvested → [1] Lead Pool grows → [2] Jackie qualifies more → [3] More qualified leads → [7] Routing handles more volume → [4] More active jobs → [9] Scorecards sharpen → [10] Pixel learns faster → [12] ML gets smarter → [5] Better contractors retained → [11] ",
+            React.createElement("span", { style: { color: C.orange, fontWeight: 700 } }, "MORE REVENUE → CYCLE COMPOUNDS")
+          )
+        ),
+
+        // Pixel Moat
+        React.createElement("div", { style: { background: C.rose + "06", border: "1px solid " + C.rose + "20", borderRadius: "6px", padding: "14px", marginBottom: "12px" } },
+          React.createElement("div", { style: { fontSize: "9px", letterSpacing: "2px", color: C.rose, fontWeight: 700, marginBottom: "8px" } }, "🛡 THE MOAT — STOCK 10: MARKETING INTELLIGENCE"),
+          React.createElement("div", { style: { fontSize: "11px", color: C.textMid, lineHeight: 1.8 } },
+            "Every contractor's ads improve the master pixel. Offline conversions feed CAPI. Appointment events close the loop. Lead quality feedback sharpens targeting. ",
+            React.createElement("br"),
+            React.createElement("span", { style: { color: C.rose, fontWeight: 600 } }, "Result: Cheaper leads over time. Better lookalikes. Algorithmic learning that competitors cannot replicate without your data.")
+          )
+        ),
+
+        // ML Moat
+        React.createElement("div", { style: { background: C.purple + "06", border: "1px solid " + C.purple + "20", borderRadius: "6px", padding: "14px", marginBottom: "12px" } },
+          React.createElement("div", { style: { fontSize: "9px", letterSpacing: "2px", color: C.purple, fontWeight: 700, marginBottom: "8px" } }, "🧠 THE LONG-TERM MOAT — STOCK 12: ML INTELLIGENCE LAYER"),
+          React.createElement("div", { style: { fontSize: "11px", color: C.textMid, lineHeight: 1.8 } },
+            "Every job attempt, contractor response, appointment outcome, and performance metric feeds a private dataset that makes routing smarter over time. ",
+            React.createElement("br"),
+            React.createElement("span", { style: { color: C.purple, fontWeight: 600 } }, "This is the moat that deepens with every transaction. Unreplicable without years of operational data.")
+          )
+        ),
+
+        // Metrics
+        React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px", marginBottom: "12px" } },
+          [
+            { label: "Human Touch", value: "2-3 min", sub: "Lead magnet calls only", color: C.green },
+            { label: "Reinvest", value: "80%", sub: "Revenue → ads", color: C.orange },
+            { label: "Personal", value: "20%", sub: "$100/contractor/mo", color: C.cyan },
+            { label: "Stocks", value: "12", sub: "Accumulation points", color: C.blue },
+            { label: "Engines", value: "3", sub: "Lead · Routing · Contractor", color: C.amber },
+            { label: "Cross Flows", value: String(crossFlows.length), sub: "Inter-stock connections", color: C.purple },
+          ].map((m, i) => React.createElement("div", { key: i, style: { background: C.surface, border: "1px solid " + C.border, borderRadius: "6px", padding: "10px" } },
+            React.createElement("div", { style: { fontSize: "8px", color: C.textDim, letterSpacing: "1px", textTransform: "uppercase" } }, m.label),
+            React.createElement("div", { style: { fontSize: "20px", fontWeight: 700, color: m.color, marginTop: "2px" } }, m.value),
+            React.createElement("div", { style: { fontSize: "9px", color: C.textDim, marginTop: "1px" } }, m.sub)
+          ))
+        ),
+
+        // Tech Stack
+        React.createElement("div", { style: { background: C.surface, border: "1px solid " + C.border, borderRadius: "6px", padding: "14px" } },
+          React.createElement("div", { style: { fontSize: "9px", letterSpacing: "2px", color: C.blue, fontWeight: 700, marginBottom: "8px" } }, "⚙ INFRASTRUCTURE"),
+          React.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: "4px" } },
+            ["Node.js", "Express", "Supabase", "PostgreSQL", "PostGIS", "BullMQ", "Redis", "Telnyx", "Stripe", "UpHex", "Facebook CAPI", "OpenAI", "Claude API", "NYC SODA", "Google Places", "Yelp", "Data Axle", "Railway", "PostHog", "JWT"].map((t, i) =>
+              React.createElement("span", { key: i, style: { fontSize: "9px", padding: "3px 8px", borderRadius: "10px", background: C.blue + "0a", border: "1px solid " + C.blue + "20", color: C.blue } }, t)
+            )
+          )
+        )
+      )
+    ),
+
+    // Footer
+    React.createElement("div", { style: { textAlign: "center", marginTop: "32px", paddingTop: "16px", borderTop: "1px solid " + C.border, fontSize: "8px", color: C.textDim, letterSpacing: "2px", lineHeight: 2 } },
+      "HOME RENO HOTSPOT — COMPLETE SYSTEMS THINKING MODEL v3.0",
+      React.createElement("br"),
+      "12 STOCKS · 3 ENGINES · " + crossFlows.length + " CROSS-FLOWS · 2 MOATS (PIXEL + ML)",
+      React.createElement("br"),
+      React.createElement("span", { style: { color: C.green } }, "SINGLE HUMAN TOUCHPOINT: LEAD MAGNET CALL · EVERYTHING ELSE IS THE MACHINE")
+    )
+  );
+}
+
+ReactDOM.render(React.createElement(App), document.getElementById("root"));
+</script>
+</body>
+</html>
