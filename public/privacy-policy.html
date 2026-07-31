@@ -143,13 +143,27 @@
       <ul>
         <li><strong>Contact information:</strong> Name, phone number, and email address when you provide them.</li>
         <li><strong>Project scope:</strong> Descriptions of renovation work, location (such as neighborhood or borough), timeline preferences you share, and related details provided via form or messaging.</li>
-        <li><strong>Reference photos:</strong> Images you voluntarily send to help describe project scope for matching and coordination purposes.</li>
+        <li><strong>Spatial media:</strong> Photos and video you voluntarily capture of interior or exterior spaces related to your renovation request, submitted through our messaging flow or upload process.</li>
+        <li><strong>Derived 3D spatial models:</strong> Three-dimensional reconstructions generated from your submitted spatial media through photogrammetry processing.</li>
         <li><strong>Communication data:</strong> Content and metadata of messages exchanged with our automated and human-assisted systems via SMS, RCS, or other supported channels.</li>
         <li><strong>Consent records:</strong> Documentation of your opt-in to receive SMS or RCS messages, where applicable.</li>
       </ul>
-      <div class="highlight">
-        <p><strong>What we do not collect through our public-facing service:</strong> We do not collect, generate, or process three-dimensional models, photogrammetry outputs, LiDAR scans, or spatial reconstruction data as part of our published homeowner or contractor coordination service.</p>
-      </div>
+    </section>
+
+    <section>
+      <h2>Spatial Media and 3D Models</h2>
+      <p>
+        When you choose to participate in spatial scoping, you voluntarily capture photos or video of the relevant area of your home and submit them through our platform. We use these submissions to help document project scope for matching and contractor coordination.
+      </p>
+      <p>
+        <strong>Processing:</strong> Your spatial media is sent to <strong>Polycam</strong>, our third-party photogrammetry processor, which reconstructs the captures into a 3D spatial model. Polycam processes the imagery solely to produce that reconstruction on our behalf.
+      </p>
+      <p>
+        <strong>Contractor packet:</strong> When we coordinate a scoped introduction, the matched credential-verified contractor receives a project packet that includes your project scope, the derived 3D spatial model, and related coordination materials needed to understand the request. Source photos and video may also be included where relevant to the scope.
+      </p>
+      <p>
+        <strong>Retention and deletion:</strong> We retain spatial source media and derived 3D models for as long as needed to qualify your request, deliver the contractor packet, support active coordination, and maintain reasonable operational records. When you request deletion (see &ldquo;Your Rights&rdquo;), we delete or de-identify spatial source media and derived models from our active systems, subject to applicable law and limited backup retention periods. You may also withdraw from further spatial capture at any time by declining to submit additional media.
+      </p>
     </section>
 
     <section>
@@ -157,10 +171,13 @@
       <p>We use the information described above to:</p>
       <ul>
         <li>Qualify and scope renovation requests submitted by homeowners.</li>
+        <li>Process voluntarily submitted spatial media into 3D spatial models for project documentation.</li>
+        <li>Assemble and deliver scoped project packets to matched contractors.</li>
         <li>Verify contractor licensing and certificate of insurance (COI) documentation submitted during enrollment.</li>
         <li>Coordinate a single, scoped introduction between a homeowner and a credential-verified contractor.</li>
         <li>Operate our masked relay communication system so parties can coordinate without direct exposure of personal phone numbers for unsolicited contact or resale.</li>
         <li>Send service-related SMS or RCS messages about your request, scheduling, and coordination.</li>
+        <li>Process contractor subscription payments where applicable.</li>
         <li>Respond to support inquiries, process opt-out requests, and comply with legal obligations.</li>
       </ul>
     </section>
@@ -192,11 +209,18 @@
       <p><strong>We do not sell your personal information.</strong></p>
       <h3>With matched contractors or homeowners</h3>
       <p>
-        We share project scope information and coordination details necessary to facilitate a scoped introduction. Contact coordination occurs through our masked relay system; we do not sell or expose phone numbers for third-party marketing or lead resale.
+        We share project scope information, spatial project packets (including derived 3D spatial models and related media where applicable), and coordination details necessary to facilitate a scoped introduction. Contact coordination occurs through our masked relay system; we do not sell or expose phone numbers for third-party marketing or lead resale.
       </p>
       <h3>With service providers</h3>
+      <p>We share information with the following processors, each of which receives only what is needed to perform its function for us:</p>
+      <ul>
+        <li><strong>Telnyx</strong> — SMS and RCS message delivery; receives mobile phone numbers, message content, and related messaging metadata needed to send and receive service communications.</li>
+        <li><strong>Supabase</strong> — Application data and media storage; receives contact information, project scope, spatial source media, derived 3D spatial models, communication records, and consent records needed to operate the platform.</li>
+        <li><strong>Stripe</strong> — Payment processing for contractor subscriptions; receives contractor billing and payment information submitted at enrollment. Stripe does not receive homeowner spatial media or homeowner project packets.</li>
+        <li><strong>Polycam</strong> — Photogrammetry and 3D spatial reconstruction; receives homeowner-captured photos and video submitted for spatial scoping and returns derived 3D spatial models to us for inclusion in contractor packets.</li>
+      </ul>
       <p>
-        We may share information with infrastructure and messaging providers (such as hosting and SMS/RCS delivery partners) that help us operate the platform. These providers are contractually required to protect your information and use it only to perform services for us.
+        These providers are contractually required to protect your information and use it only to perform services for us, except where they must retain data under their own legal or security obligations.
       </p>
       <h3>Legal requirements</h3>
       <p>

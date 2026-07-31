@@ -3,147 +3,389 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home Reno Hotspot — Connect with Vetted NYC Renovation Pros</title>
+  <meta name="description" content="Home Reno Hotspot — zero-spam home renovation matching. One homeowner, one credential-verified contractor, zero lead-broker noise.">
+  <title>Home Reno Hotspot — Renovation Matching Utility</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --ink: #1a1a1a;
+      --ink-muted: #555;
+      --ink-soft: #666;
+      --surface: #ffffff;
+      --canvas: #f4f5f7;
+      --border: #e4e6ea;
+      --accent: #0066cc;
+      --accent-hover: #0052a3;
+      --accent-soft: #f0f6ff;
+      --disclaimer-bg: #fafafa;
+      --disclaimer-border: #c8cdd4;
+      --max: 1040px;
+    }
+
+    html { scroll-behavior: smooth; }
+
     body {
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       line-height: 1.6;
-      color: #333;
-      background: #f8f9fa;
+      color: var(--ink);
+      background: var(--canvas);
       min-height: 100vh;
     }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
     .site-header {
-      background: #1a1a1a;
+      background: var(--ink);
       color: #fff;
-      padding: 16px 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-bottom: 1px solid #2a2a2a;
     }
+
     .site-header .inner {
-      max-width: 960px;
+      max-width: var(--max);
       margin: 0 auto;
+      padding: 18px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 16px;
       flex-wrap: wrap;
-      gap: 12px;
     }
-    .site-header a {
+
+    .brand {
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
       color: #fff;
       text-decoration: none;
-      font-size: 0.95rem;
     }
-    .site-header a:hover { text-decoration: underline; }
-    .logo { font-weight: 700; font-size: 1.25rem; }
-    .nav { display: flex; gap: 20px; flex-wrap: wrap; }
-    .hero {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 48px 24px 32px;
-      text-align: center;
-    }
-    .hero h1 { font-size: 2.25rem; color: #1a1a1a; margin-bottom: 12px; }
-    .hero .tagline { font-size: 1.2rem; color: #555; max-width: 560px; margin: 0 auto 32px; }
-    .container {
-      max-width: 720px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-      padding: 48px 40px;
-      margin-bottom: 32px;
-    }
-    h2 { font-size: 1.35rem; color: #1a1a1a; margin-top: 28px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
-    p { margin-bottom: 16px; color: #444; }
-    .links {
-      margin-top: 32px;
-      padding-top: 24px;
-      border-top: 1px solid #eee;
+
+    .brand:hover { text-decoration: none; opacity: 0.92; }
+
+    .nav {
       display: flex;
+      gap: 22px;
       flex-wrap: wrap;
-      gap: 12px 20px;
+      font-size: 0.92rem;
     }
-    .links a {
-      color: #0066cc;
+
+    .nav a {
+      color: rgba(255, 255, 255, 0.88);
       text-decoration: none;
     }
-    .links a:hover { text-decoration: underline; }
-    .contact {
-      margin-top: 24px;
+
+    .nav a:hover { color: #fff; text-decoration: underline; }
+
+    .hero {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 64px 24px 48px;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 4.5vw, 2.75rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      max-width: 18ch;
+      margin-bottom: 20px;
+    }
+
+    .hero-lead {
+      font-size: 1.125rem;
+      color: var(--ink-muted);
+      max-width: 52ch;
+      margin-bottom: 12px;
+    }
+
+    .hero-sub {
+      font-size: 0.98rem;
+      color: var(--ink-soft);
+      max-width: 56ch;
+    }
+
+    .paths {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px 48px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .path-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 32px 28px;
+    }
+
+    .path-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .path-card h2 {
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 14px;
+      line-height: 1.3;
+    }
+
+    .path-card p {
+      color: var(--ink-muted);
+      font-size: 0.96rem;
+      margin-bottom: 12px;
+    }
+
+    .path-card p:last-child { margin-bottom: 0; }
+
+    .path-list {
+      list-style: none;
+      margin-top: 16px;
+      padding: 0;
+    }
+
+    .path-list li {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 10px;
+      color: var(--ink-muted);
+      font-size: 0.94rem;
+    }
+
+    .path-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .utility-band {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px 56px;
+    }
+
+    .utility-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 36px 32px;
+    }
+
+    .utility-inner h2 {
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 14px;
+      color: var(--ink);
+    }
+
+    .utility-inner p {
+      color: var(--ink-muted);
       font-size: 0.95rem;
-      color: #666;
+      margin-bottom: 12px;
     }
-    .contact a { color: #0066cc; text-decoration: none; }
-    .contact a:hover { text-decoration: underline; }
-    footer {
-      text-align: center;
+
+    .utility-inner p:last-child { margin-bottom: 0; }
+
+    .disclaimer {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px 64px;
+    }
+
+    .disclaimer-box {
+      background: var(--disclaimer-bg);
+      border: 1px solid var(--disclaimer-border);
+      border-left: 3px solid var(--ink);
+      border-radius: 0 8px 8px 0;
+      padding: 28px 32px;
+    }
+
+    .disclaimer-box h2 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .disclaimer-box p {
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }
+
+    .disclaimer-box p:last-child { margin-bottom: 0; }
+
+    .cta-row {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px 48px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 13px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      border: 1px solid var(--accent);
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+      text-decoration: none;
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--canvas);
+      border-color: #c8cdd4;
+      color: var(--ink);
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--border);
+      background: var(--surface);
       padding: 32px 24px;
+      text-align: center;
       font-size: 0.85rem;
-      color: #666;
-      border-top: 1px solid #eee;
+      color: var(--ink-soft);
     }
-    footer a { color: #0066cc; text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
+
+    .site-footer p { margin-bottom: 8px; }
+    .site-footer p:last-child { margin-bottom: 0; }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .hero { padding-top: 48px; }
+      .path-card, .utility-inner, .disclaimer-box { padding: 24px 20px; }
+    }
   </style>
 </head>
 <body>
   <header class="site-header">
     <div class="inner">
-      <a href="index.html" class="logo">
-      <img src="logo.png" alt="Home Reno Hotspot" style="height: 36px; width: auto;">
-    </a>
-      <nav class="nav">
-        <a href="about.html">About</a>
-        <a href="for-contractors.html">For Contractors</a>
-        <a href="contact.html">Contact</a>
-        <a href="privacy-policy.html">Privacy Policy</a>
-        <a href="terms-of-service.html">Terms</a>
-        <a href="homeowner-opt-in.html">SMS Opt-In</a>
+      <a href="/" class="brand">Home Reno Hotspot</a>
+      <nav class="nav" aria-label="Site">
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms-of-service">Terms of Service</a>
+        <a href="mailto:help@homerenohotspot.com">Contact</a>
       </nav>
     </div>
   </header>
 
   <section class="hero">
-    <h1>Home Reno Hotspot</h1>
-    <p class="tagline">Connect with vetted renovation pros in NYC — fast, simple, and fair.</p>
+    <span class="hero-eyebrow">NYC Metro · Renovation Matching</span>
+    <h1>Zero-spam home renovation matching.</h1>
+    <p class="hero-lead">One homeowner. One credential-verified contractor. Zero lead-broker noise.</p>
+    <p class="hero-sub">Home Reno Hotspot is a scheduling and verification utility — not a lead marketplace. We coordinate scoped introductions so you can move forward on your terms.</p>
   </section>
 
-  <div class="container">
-    <p>
-      Home Reno Hotspot is an AI-driven platform that matches homeowners with qualified contractors for painting, 
-      kitchen and bath work, flooring, and other renovation projects in the New York City area. We handle the 
-      conversation, qualification, and scheduling so you get a serious pro on the phone — no bidding wars, no spam.
-    </p>
+  <section class="paths" aria-label="Service paths">
+    <article class="path-card">
+      <div class="path-label">Homeowners</div>
+      <h2>Share scope by message. Get one exclusive match.</h2>
+      <p>Start with your name and phone number, then continue over native messaging — SMS or RCS — to describe your project. When you opt in to spatial scoping, you capture photos or video of the relevant space and we process them into a 3D spatial model for your project packet.</p>
+      <ul class="path-list">
+        <li>Low-friction photo and video capture via messaging</li>
+        <li>3D spatial model included in the packet delivered to your matched pro</li>
+        <li>Exclusive connection to a credential-verified local contractor</li>
+        <li>No bidding wars or multi-contractor spam</li>
+        <li>Phone numbers handled through our masked relay — not sold or exposed for resale</li>
+      </ul>
+    </article>
 
-    <h2>How it works</h2>
-    <p>
-      Share your project and timeline with us via text or our lead form. We qualify your request, book a call window, 
-      and connect you with a vetted contractor in your area. You decide whether to move forward — no obligation.
-    </p>
+    <article class="path-card">
+      <div class="path-label">Contractors</div>
+      <h2>License and COI verification. Exclusive matching access.</h2>
+      <p>Contractors enroll through a separate onboarding path. We verify licensing and certificate of insurance (COI) credentials before granting access to matched homeowner requests.</p>
+      <ul class="path-list">
+        <li>Credential verification against submitted license and COI documentation</li>
+        <li>Scoped project packets with 3D spatial models and project details — not shared lead lists</li>
+        <li>Exclusive matches delivered one at a time</li>
+        <li>Coordination through the platform relay system</li>
+        <li>Subscription terms provided at contractor enrollment</li>
+      </ul>
+    </article>
+  </section>
 
-    <div class="links">
-      <strong>Legal &amp; support</strong><br>
-      <a href="privacy-policy.html">Privacy Policy</a>
-      <a href="terms-of-service.html">Terms of Service</a>
-      <a href="about.html">About</a>
-      <a href="for-contractors.html">For Contractors</a>
-      <a href="contact.html">Contact</a>
-      <a href="help.html">Help</a>
-      <a href="homeowner-opt-in.html">Homeowner SMS opt-in</a>
-      <a href="contractor-opt-in.html">Contractor SMS opt-in</a>
+  <section class="utility-band">
+    <div class="utility-inner">
+      <h2>How the utility works</h2>
+      <p>We collect contact details and project scope, then — when you choose spatial scoping — process photos and video you capture into a 3D spatial model. That model, together with your project details, forms the packet we deliver to one credential-verified contractor for a scoped introduction.</p>
+      <p>Communications run through SMS and RCS where supported. Reply <strong>STOP</strong> to opt out of messages or <strong>HELP</strong> for assistance. Message and data rates may apply.</p>
     </div>
+  </section>
 
-    <div class="contact">
-      <strong>Contact</strong><br>
-      Email: <a href="mailto:help@homerenohotspot.com">help@homerenohotspot.com</a>
+  <section class="disclaimer" aria-label="Legal disclaimer">
+    <div class="disclaimer-box">
+      <h2>Legal Disclaimer</h2>
+      <p>Home Reno Hotspot is a technology platform that provides scheduling, verification, and coordination services. We are not a general contractor, subcontractor, construction manager, or insurance provider.</p>
+      <p>We are not a broker, agent, or party to any agreement between a homeowner and a contractor. Any contract, payment, warranty, or dispute regarding renovation work exists solely between those parties.</p>
+      <p>Credential verification reflects documentation and records available at the time of review. It does not constitute a guarantee of performance, licensing status in perpetuity, or the outcome of any project. Homeowners and contractors are responsible for their own due diligence before entering any agreement.</p>
     </div>
+  </section>
+
+  <div class="cta-row">
+    <a class="btn" href="mailto:help@homerenohotspot.com">help@homerenohotspot.com</a>
+    <a class="btn btn-secondary" href="/privacy-policy">Privacy Policy</a>
+    <a class="btn btn-secondary" href="/terms-of-service">Terms of Service</a>
   </div>
 
-  <footer>
+  <footer class="site-footer">
     <p>&copy; 2026 Home Reno Hotspot. All rights reserved.</p>
-    <p style="margin-top: 8px;">
-      <a href="privacy-policy.html">Privacy Policy</a> &middot; <a href="terms-of-service.html">Terms of Service</a> &middot; <a href="contact.html">Contact</a>
-    </p>
+    <p>Service area: New York City Metro Area</p>
+    <div class="footer-links">
+      <a href="/privacy-policy">Privacy Policy</a>
+      <a href="/terms-of-service">Terms of Service</a>
+      <a href="mailto:help@homerenohotspot.com">Contact</a>
+    </div>
   </footer>
 </body>
 </html>
