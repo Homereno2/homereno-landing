@@ -1,5 +1,11 @@
 {
+  "name": "homereno-landing",
+  "private": true,
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
+    "express": "^4.22.2",
     "xlsx": "^0.18.5"
   }
 }
