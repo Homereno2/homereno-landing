@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Request a water heater replacement in Columbus. One licensed plumber, and you pay nothing to Home Reno Hotspot.">
+  <title>Request a water heater replacement · Home Reno Hotspot</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --ink: #1a1a1a; --ink-muted: #555; --ink-soft: #666; --surface: #fff;
+      --canvas: #f4f5f7; --border: #e4e6ea; --accent: #0066cc; --accent-hover: #0052a3;
+      --max: 640px;
+    }
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.5; color: var(--ink); background: var(--canvas); }
+    a { color: var(--accent); }
+    .site-header { background: var(--ink); color: #fff; }
+    .site-header .inner { max-width: 1040px; margin: 0 auto; padding: 18px 24px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .brand { color: #fff; font-weight: 700; text-decoration: none; }
+    .nav { display: flex; gap: 18px; font-size: 0.92rem; }
+    .nav a { color: rgba(255,255,255,0.88); text-decoration: none; }
+    main { max-width: var(--max); margin: 0 auto; padding: 40px 24px 64px; }
+    h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); letter-spacing: -0.03em; line-height: 1.15; }
+    .lead { margin-top: 12px; color: var(--ink-muted); }
+    form, .done { margin-top: 28px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+    .step-label { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+    fieldset { border: 0; margin-top: 16px; }
+    legend, label.q { font-weight: 650; font-size: 1.15rem; }
+    .choices { display: grid; gap: 10px; margin-top: 16px; }
+    .choices button, .next, .back, button[type="submit"] {
+      font: inherit; cursor: pointer; border-radius: 8px; padding: 12px 16px; text-align: left;
+    }
+    .choices button { background: #fff; border: 1px solid var(--border); }
+    .choices button[aria-pressed="true"], .choices button:hover { border-color: var(--accent); background: #f0f6ff; }
+    input[type="text"], input[type="tel"] { width: 100%; margin-top: 12px; padding: 12px 14px; font: inherit; border: 1px solid var(--border); border-radius: 8px; }
+    .hint { margin-top: 8px; color: var(--ink-soft); font-size: 0.9rem; }
+    .row { display: flex; gap: 10px; margin-top: 20px; }
+    .next, button[type="submit"] { background: var(--accent); color: #fff; border: 0; font-weight: 600; }
+    .next:hover, button[type="submit"]:hover { background: var(--accent-hover); }
+    .back { background: #fff; border: 1px solid var(--border); }
+    .consent { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; font-size: 0.92rem; color: var(--ink-muted); }
+    .consent input { margin-top: 4px; }
+    .error { margin-top: 12px; color: #9b1c1c; }
+    .hp { position: absolute; left: -9999px; }
+    footer { max-width: 1040px; margin: 0 auto; padding: 24px; color: var(--ink-soft); font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="/">Home Reno Hotspot</a>
+      <nav class="nav" aria-label="Site">
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms-of-service">Terms</a>
+        <a href="tel:+15162066682">+1 516-206-6682</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <h1>Request a water heater replacement</h1>
+    <p class="lead">Columbus, Ohio. You pay nothing to us. We ask you to confirm one licensed plumber before anyone calls.</p>
+
+    <form id="request" novalidate>
+      <p class="step-label" id="step-label">Step 1 of 6</p>
+      <p class="hp" aria-hidden="true"><label>Company website <input name="company_website" tabindex="-1" autocomplete="off"></label></p>
+
+      <fieldset data-step="1">
+        <legend>What is going on with the water heater?</legend>
+        <div class="choices">
+          <button type="button" data-problem="Leaking">It is leaking</button>
+          <button type="button" data-problem="No hot water">There is no hot water</button>
+          <button type="button" data-problem="Planning a replacement">I am planning a replacement</button>
+        </div>
+      </fieldset>
+
+      <fieldset data-step="2" hidden>
+        <label class="q" for="zip">What is the zip code?</label>
+        <input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="43230">
+      </fieldset>
+
+      <fieldset data-step="3" hidden>
+        <legend>Do you own the home?</legend>
+        <div class="choices">
+          <button type="button" data-owner="yes">Yes, I own it</button>
+          <button type="button" data-owner="no">No, I rent</button>
+        </div>
+      </fieldset>
+
+      <fieldset data-step="4" hidden>
+        <label class="q" for="labelPhoto">Photo of the label on the heater</label>
+        <p class="hint">Optional. The label is usually on the side of the tank. A clear photo lets us read the brand and age.</p>
+        <input id="labelPhoto" name="labelPhoto" type="file" accept="image/*" capture="environment" style="margin-top:12px">
+      </fieldset>
+
+      <fieldset data-step="5" hidden>
+        <label class="q" for="firstName">Your first name</label>
+        <input id="firstName" name="firstName" type="text" autocomplete="given-name">
+        <label class="q" for="mobile" style="display:block;margin-top:16px">Mobile number</label>
+        <input id="mobile" name="mobile" type="tel" autocomplete="tel" placeholder="(614) 555-0123">
+      </fieldset>
+
+      <fieldset data-step="6" hidden>
+        <p class="q">Texts are optional. You can submit without them.</p>
+        <label class="consent">
+          <input id="smsConsent" type="checkbox">
+          <span>I agree to receive customer care texts from Home Reno Hotspot at the number provided, including qualification questions, appointment updates, and messages from the plumber connected through Home Reno Hotspot. Consent is not a condition of submitting this request. Message frequency varies. Msg &amp; data rates may apply. Reply HELP for help, STOP to opt out. <a href="/privacy-policy">Privacy Policy</a> | <a href="/terms-of-service">Terms</a></span>
+        </label>
+      </fieldset>
+
+      <p class="error" id="error" hidden></p>
+      <div class="row">
+        <button class="back" type="button" id="back" hidden>Back</button>
+        <button class="next" type="button" id="next">Continue</button>
+        <button type="submit" id="submit" hidden>Submit request</button>
+      </div>
+    </form>
+
+    <div class="done" id="done" hidden>
+      <h2>Request received.</h2>
+      <p class="hint" id="done-detail"></p>
+    </div>
+  </main>
+  <footer>Home Reno Hotspot LLC · Columbus, Ohio · Call <a href="tel:+15162066682">+1 516-206-6682</a></footer>
+  <script>
+    const started = Date.now();
+    const form = document.getElementById("request");
+    const steps = [...form.querySelectorAll("[data-step]")];
+    const error = document.getElementById("error");
+    let step = 1;
+    let problem = "";
+    let ownsHome = "";
+
+    function show(message) {
+      error.hidden = !message;
+      error.textContent = message || "";
+    }
+    function render() {
+      steps.forEach((node) => { node.hidden = Number(node.dataset.step) !== step; });
+      document.getElementById("step-label").textContent = "Step " + step + " of 6";
+      document.getElementById("back").hidden = step === 1;
+      document.getElementById("next").hidden = step === 6;
+      document.getElementById("submit").hidden = step !== 6;
+      show("");
+    }
+    form.querySelectorAll("[data-problem]").forEach((button) => {
+      button.addEventListener("click", () => {
+        problem = button.dataset.problem;
+        form.querySelectorAll("[data-problem]").forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
+      });
+    });
+    form.querySelectorAll("[data-owner]").forEach((button) => {
+      button.addEventListener("click", () => {
+        ownsHome = button.dataset.owner;
+        form.querySelectorAll("[data-owner]").forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
+      });
+    });
+    document.getElementById("next").addEventListener("click", () => {
+      if (step === 1 && !problem) return show("Choose what is going on with the heater.");
+      if (step === 2 && !/^\d{5}$/.test(document.getElementById("zip").value.trim())) return show("Enter a 5-digit zip code.");
+      if (step === 3 && !ownsHome) return show("Tell us whether you own the home.");
+      if (step === 5) {
+        if (document.getElementById("firstName").value.trim().length < 2) return show("Enter your first name.");
+        if (document.getElementById("mobile").value.replace(/\D/g, "").length < 10) return show("Enter a valid US mobile number.");
+      }
+      step += 1;
+      render();
+    });
+    document.getElementById("back").addEventListener("click", () => { step = Math.max(1, step - 1); render(); });
+
+    async function shrink(file) {
+      if (!file) return null;
+      const image = await createImageBitmap(file).catch(() => null);
+      if (!image) return file;
+      const scale = Math.min(1, 1600 / Math.max(image.width, image.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(image.width * scale);
+      canvas.height = Math.round(image.height * scale);
+      canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.82));
+      return blob ? new File([blob], "label.jpg", { type: "image/jpeg" }) : file;
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const submit = document.getElementById("submit");
+      submit.disabled = true;
+      show("");
+      const data = new FormData();
+      data.set("problem", problem);
+      data.set("zip", document.getElementById("zip").value.trim());
+      data.set("ownsHome", ownsHome);
+      data.set("firstName", document.getElementById("firstName").value.trim());
+      data.set("mobile", document.getElementById("mobile").value.trim());
+      data.set("smsConsent", document.getElementById("smsConsent").checked ? "true" : "false");
+      data.set("company_website", form.company_website.value);
+      data.set("elapsedMs", String(Date.now() - started));
+      const photo = document.getElementById("labelPhoto").files[0];
+      if (photo) data.set("labelPhoto", await shrink(photo));
+      try {
+        const response = await fetch("https://partners.homerenohotspot.com/api/request", { method: "POST", body: data });
+        const body = await response.json().catch(() => ({}));
+        if (!response.ok || !body.ok) {
+          show(body.message || "We couldn't save that request. Please call +1 516-206-6682.");
+          submit.disabled = false;
+          return;
+        }
+        form.hidden = true;
+        const done = document.getElementById("done");
+        done.hidden = false;
+        document.getElementById("done-detail").textContent = document.getElementById("smsConsent").checked
+          ? "You'll get a confirmation text from +1 347-502-2821."
+          : "We will follow up by phone. You will not receive texts.";
+      } catch {
+        show("We couldn't save that request. Please call +1 516-206-6682.");
+        submit.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
