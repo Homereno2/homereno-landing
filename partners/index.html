@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner sign-up — Home Reno Hotspot</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; line-height: 1.65; color: #333; background: #f4f5f7; }
+    a { color: #0066cc; }
+    header, footer, main { max-width: 720px; margin: 0 auto; padding: 24px 20px; }
+    header { color: #fff; background: #1a1a1a; max-width: none; }
+    header div, footer div { max-width: 720px; margin: 0 auto; }
+    main { background: #fff; }
+    h1 { color: #1a1a1a; font-size: 1.8rem; }
+    label { display: block; margin-top: 14px; font-weight: 600; color: #1a1a1a; }
+    input[type="text"], input[type="email"], input[type="tel"] { width: 100%; margin-top: 6px; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; }
+    .consent { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; margin-top: 18px; }
+    .consent input { margin-top: 6px; }
+    button { margin-top: 18px; background: #1a1a1a; color: #fff; border: 0; border-radius: 8px; padding: 12px 18px; font-size: 16px; }
+    .note { margin-top: 10px; }
+    .hp { position: absolute; left: -9999px; }
+    footer { font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <header><div><a href="/" style="color:#fff;text-decoration:none;font-weight:600">Home Reno Hotspot</a></div></header>
+  <main>
+    <h1>Partner sign-up</h1>
+    <p>Home Reno Hotspot LLC introduces homeowners to independent licensed plumbers. We do not perform plumbing work. We do not send job-offer texts unless you check the box.</p>
+    <form id="partner-form">
+      <label>Full name<input name="fullName" type="text" autocomplete="name" required minlength="2"></label>
+      <label>Business name<input name="businessName" type="text" autocomplete="organization" required minlength="2"></label>
+      <label>Mobile number<input name="mobile" type="tel" autocomplete="tel" required></label>
+      <label>Email<input name="email" type="email" autocomplete="email" required></label>
+      <label>License number<input name="licenseNumber" type="text" required minlength="3"></label>
+      <label>Service zip codes<input name="serviceZips" type="text" required placeholder="32601, 32605"></label>
+      <label class="hp">Company website<input name="company_website" type="text" tabindex="-1" autocomplete="off"></label>
+      <label class="consent">
+        <input name="smsConsent" type="checkbox">
+        <span>I agree to receive automated job-offer texts and automated or AI-voice calls from Home Reno Hotspot at the mobile number provided. Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help. Consent is not a condition of partnership.</span>
+      </label>
+      <p class="note"><a href="/terms">Terms</a> · <a href="/privacy">Privacy</a></p>
+      <p id="form-message" hidden></p>
+      <button type="submit">Submit</button>
+    </form>
+  </main>
+  <footer>
+    <div>
+      <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/partners">Partners</a>
+    </div>
+  </footer>
+  <script>
+    const started = Date.now();
+    document.getElementById("partner-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const message = document.getElementById("form-message");
+      message.hidden = false;
+      message.textContent = "Saving…";
+      const response = await fetch("https://partners.homerenohotspot.com/api/partners", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: data.get("fullName"),
+          businessName: data.get("businessName"),
+          mobile: data.get("mobile"),
+          email: data.get("email"),
+          licenseNumber: data.get("licenseNumber"),
+          serviceZips: data.get("serviceZips"),
+          smsConsent: data.get("smsConsent") === "on",
+          company_website: data.get("company_website"),
+          elapsedMs: Date.now() - started,
+          pageUrl: location.href
+        })
+      });
+      const body = await response.json().catch(() => null);
+      if (!response.ok || !body || !body.ok) {
+        message.textContent = (body && body.message) || "We couldn't save that.";
+        return;
+      }
+      form.hidden = true;
+      message.textContent = "Thanks. We saved your sign-up. Job-offer texts are sent only if you checked the box.";
+    });
+  </script>
+</body>
+</html>
